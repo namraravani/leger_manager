@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "79519647699",
+    "project_id": "hcdproject-c4932",
+    "storage_bucket": "hcdproject-c4932.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:79519647699:android:f200f9c012d7a98e8f5126",
+        "android_client_info": {
+          "package_name": "com.example.leger_manager"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDag27XrH0FbGchHNGuNKegMjltFACX_wA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
