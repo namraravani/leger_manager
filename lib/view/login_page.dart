@@ -5,6 +5,7 @@ import 'package:leger_manager/Components/app_colors.dart';
 
 import 'package:leger_manager/Components/text_logo.dart';
 import 'package:leger_manager/Controller/login_controller.dart';
+import 'package:leger_manager/view/otp_verification_page.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key});
@@ -126,6 +127,8 @@ class _LoginPageState extends State<LoginPage> {
                     child: IconButton(
                       onPressed: () {
                         loginController.addMobileNumber();
+                        loginController.mobileno.clear();
+                        Get.to(OTPVerification());
                       },
                       icon: Icon(Icons.check),
                     ),
