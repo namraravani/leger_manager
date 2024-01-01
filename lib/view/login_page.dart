@@ -128,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: () {
                         loginController.addMobileNumber();
                         loginController.mobileno.clear();
-                        Get.to(OTPVerification());
+                        // Get.to(OTPVerification(phoneNumber: loginController.mobileno.to,));
                       },
                       icon: Icon(Icons.check),
                     ),

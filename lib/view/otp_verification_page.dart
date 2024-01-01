@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:leger_manager/Controller/login_controller.dart';
-
+ 
 class OTPVerification extends StatelessWidget {
-  const OTPVerification({super.key});
+  final String phoneNumber;
+  const OTPVerification({Key? key, required this.phoneNumber});
 
   @override
   Widget build(BuildContext context) {
-    final LoginController loginController = Get.find<LoginController>();
+     TextEditingController otpTextController = TextEditingController();
+
+    void verifyOTP() {
+      String otpValue = otpTextController.text.trim();
+      if(phoneNumber==otpValue)
+      {
+        print("hello");
+      }
+      else
+      {
+        print("bbye");
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text("addjfah"),
@@ -15,12 +27,12 @@ class OTPVerification extends StatelessWidget {
       body: Column(
         children: [
           TextField(
-            controller: loginController.otpcontroller,
+            controller: otpTextController,
           ),
-
-          TextButton(onPressed: (){
-            
-          }, child: Text("Herllo")),
+          TextButton(
+            onPressed: verifyOTP, // Simply call verifyOTP without ()
+            child: Text("Hello"),
+          ),
         ],
       ),
     );

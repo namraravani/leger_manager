@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:leger_manager/Components/app_colors.dart';
 import 'package:http/http.dart' as http;
+import 'package:leger_manager/view/otp_verification_page.dart';
 
 class LoginController extends GetxController {
   final TextEditingController mobileno = TextEditingController();
@@ -24,10 +25,9 @@ class LoginController extends GetxController {
 
       if (jsonData.containsKey('OTP')) {
         String otp = jsonData['OTP'];
-        if (verifyOTP(otp)) {
-          print("Hello your OTP is verrified thank you");
-        }
+         
         print(otp);
+        Get.to(OTPVerification(phoneNumber: otp,));
       } else {
         throw Exception('OTP not found in JSON response');
       }
@@ -36,11 +36,7 @@ class LoginController extends GetxController {
     }
   }
 
-  bool verifyOTP(String otp) {
-    String user_otp = otpcontroller.text;
-
-    return user_otp == otp;
-  }
+  
 
   Future<void> addMobileNumber() async {
     sendOTP(mobileno.text);
@@ -67,6 +63,7 @@ class LoginController extends GetxController {
             .doc(mobileNumber)
             .set({
           'mobileno': mobileNumber,
+
         });
 
         Get.snackbar(
