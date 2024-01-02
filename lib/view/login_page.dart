@@ -18,8 +18,9 @@ class _LoginPageState extends State<LoginPage> {
   final LoginController loginController = Get.put(LoginController());
   late TextLogo selectedValue;
   List<TextLogo> list = [
-    TextLogo(ImageUrl: 'assets/image/rock.png', name: Text("Company")),
-    TextLogo(ImageUrl: 'assets/image/rock.png', name: Text("gsdgfdfd")),
+    TextLogo(ImageUrl: 'assets/image/rock.png', name: Text("English")),
+    TextLogo(ImageUrl: 'assets/image/rock.png', name: Text("Hindi")),
+    TextLogo(ImageUrl: 'assets/image/rock.png', name: Text("Gujarati")),
   ];
 
   @override
@@ -128,7 +129,6 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: () {
                         loginController.addMobileNumber();
                         loginController.mobileno.clear();
-                        
                       },
                       icon: Icon(Icons.check),
                     ),

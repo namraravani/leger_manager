@@ -41,6 +41,7 @@ dependencies:
   get_storage: ^2.0.3
   http: ^1.1.2
   pinput: ^3.0.1
+  lottie: ^2.7.0
 
 dev_dependencies:
   flutter_test:
@@ -60,6 +61,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/image/
+    - assets/animations/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
