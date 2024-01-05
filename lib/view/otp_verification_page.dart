@@ -5,7 +5,7 @@ import 'package:leger_manager/Components/app_colors.dart';
 import 'package:leger_manager/Components/elevated_button.dart';
 import 'package:leger_manager/Controller/login_controller.dart';
 import 'package:leger_manager/view/login_page.dart';
-import 'package:leger_manager/view/master_page.dart';
+import 'package:leger_manager/view/master_page/master_page.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pinput/pinput.dart';
 

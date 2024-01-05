@@ -32,7 +32,7 @@ class LoginController extends GetxController {
       if (jsonData.containsKey('OTP')) {
         updateOtp(jsonData['OTP']);
         print(generatedOtp.value);
-        Get.to(OTPVerification(
+        Get.off(OTPVerification(
           mobileNumber: mobileno,
           generatedOtp: generatedOtp,
         ));

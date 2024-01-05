@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:leger_manager/firebase_options.dart';
 import 'package:leger_manager/view/login_page.dart';
+import 'package:leger_manager/view/master_page/master_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: LoginPage(),
+      home: MasterPage(),
     );
   }
 }
