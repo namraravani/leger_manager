@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:leger_manager/Components/app_colors.dart';
+import 'package:leger_manager/Components/icon_logo.dart';
+import 'package:leger_manager/view/master_page/master_page_components/bottom_modal.dart';
+import 'package:leger_manager/view/profile_page.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -8,20 +12,32 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      leading: GestureDetector(
-        onTap: (){
-          Scaffold.of(context).openDrawer();
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: AppColors.primaryColor,
+      leading: Row(
+        children: [
+          SizedBox(
+            width: 8,
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Icon(Icons.person, color: AppColors.secondaryColor),
+          GestureDetector(
+            onTap: () {
+              showModalBottomSheet<void>(
+                context: context,
+                builder: (BuildContext context) {
+                  return CustomBottomModal();
+                },
+              );
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.primaryColor,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Icon(Icons.person, color: AppColors.secondaryColor),
+              ),
+            ),
           ),
-        ),
+        ],
       ),
       title: Row(
         children: [
@@ -56,18 +72,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           SizedBox(
             width: 10,
           ),
-          Container(
-            height: 55,
-            width: 55,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.primaryColor,
-            ),
-            child: IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.settings,
-                color: AppColors.secondaryColor,
+          GestureDetector(
+            onTap: () {
+              Scaffold.of(context).openDrawer();
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.primaryColor,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Icon(Icons.settings, color: AppColors.secondaryColor),
               ),
             ),
           ),

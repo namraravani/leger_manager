@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:leger_manager/Components/app_colors.dart';
-import 'package:leger_manager/view/master_page/app-bar.dart';
-import 'package:leger_manager/view/master_page/bottom_navbar.dart';
-import 'package:leger_manager/view/master_page/customer_page.dart';
-import 'package:leger_manager/view/master_page/supplier_page.dart';
+import 'package:leger_manager/Components/icon_logo.dart';
+import 'package:leger_manager/view/master_page/master_page_components/app-bar.dart';
+import 'package:leger_manager/view/master_page/master_page_components/bottom_navbar.dart';
+import 'package:leger_manager/view/master_page/master_page_pages/customer_page.dart';
+import 'package:leger_manager/view/master_page/master_page_components/drawer.dart';
+import 'package:leger_manager/view/master_page/master_page_pages/supplier_page.dart';
 
 class MasterPage extends StatefulWidget {
   const MasterPage({Key? key}) : super(key: key);
@@ -31,10 +33,7 @@ class _MasterPageState extends State<MasterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        backgroundColor: AppColors.primaryColor,
-        child: Text("hello"),
-      ),
+      drawer: CustomDrawer(),
       appBar: CustomAppBar(),
       body: PageView(
         controller: _pageController,
@@ -48,7 +47,6 @@ class _MasterPageState extends State<MasterPage> {
           SupplierPage(),
         ],
       ),
-      
       bottomNavigationBar: CustomBottomNavigationBar(
         selectedIndex: _currentPageIndex,
         onDestinationSelected: (int index) {
