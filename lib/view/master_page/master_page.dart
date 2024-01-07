@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:leger_manager/Components/app_colors.dart';
 import 'package:leger_manager/view/master_page/app-bar.dart';
 import 'package:leger_manager/view/master_page/bottom_navbar.dart';
 import 'package:leger_manager/view/master_page/customer_page.dart';
@@ -30,6 +31,10 @@ class _MasterPageState extends State<MasterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        backgroundColor: AppColors.primaryColor,
+        child: Text("hello"),
+      ),
       appBar: CustomAppBar(),
       body: PageView(
         controller: _pageController,
@@ -43,6 +48,7 @@ class _MasterPageState extends State<MasterPage> {
           SupplierPage(),
         ],
       ),
+      
       bottomNavigationBar: CustomBottomNavigationBar(
         selectedIndex: _currentPageIndex,
         onDestinationSelected: (int index) {

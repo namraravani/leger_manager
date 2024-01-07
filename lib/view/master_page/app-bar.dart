@@ -8,19 +8,23 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      leading: GestureDetector(
+        onTap: (){
+          Scaffold.of(context).openDrawer();
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: AppColors.primaryColor,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Icon(Icons.person, color: AppColors.secondaryColor),
+          ),
+        ),
+      ),
       title: Row(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.primaryColor,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Icon(Icons.person, color: AppColors.secondaryColor),
-            ),
-          ),
-          SizedBox(width: 10),
           Expanded(
             child: Container(
               height: 55,
@@ -53,6 +57,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             width: 10,
           ),
           Container(
+            height: 55,
+            width: 55,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: AppColors.primaryColor,
