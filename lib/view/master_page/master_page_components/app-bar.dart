@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:leger_manager/Components/app_colors.dart';
 import 'package:leger_manager/Components/icon_logo.dart';
+import 'package:leger_manager/view/inventory_page.dart';
 import 'package:leger_manager/view/master_page/master_page_components/bottom_modal.dart';
 import 'package:leger_manager/view/profile_page.dart';
 
@@ -19,12 +20,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           GestureDetector(
             onTap: () {
-              showModalBottomSheet<void>(
-                context: context,
-                builder: (BuildContext context) {
-                  return CustomBottomModal();
-                },
-              );
+              Scaffold.of(context).openDrawer();
             },
             child: Container(
               decoration: BoxDecoration(
@@ -74,7 +70,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           GestureDetector(
             onTap: () {
-              Scaffold.of(context).openDrawer();
+              Get.to(InventoryPage());
             },
             child: Container(
               decoration: BoxDecoration(
@@ -83,7 +79,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Icon(Icons.settings, color: AppColors.secondaryColor),
+                child: Icon(Icons.inventory, color: AppColors.secondaryColor),
               ),
             ),
           ),

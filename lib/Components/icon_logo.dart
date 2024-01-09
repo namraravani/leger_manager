@@ -11,15 +11,18 @@ class IconLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        icon,
-        SizedBox(
-          width: 10,
-        ),
-        name,
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          icon,
+          SizedBox(
+            width: 10,
+          ),
+          name,
+        ],
+      ),
     );
   }
 }

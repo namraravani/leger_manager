@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
 import 'package:leger_manager/Components/app_colors.dart';
 import 'package:leger_manager/Components/icon_logo.dart';
+import 'package:leger_manager/view/profile_page.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({Key? key}) : super(key: key);
@@ -13,21 +16,25 @@ class CustomDrawer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
-        
         children: [
-          Container(
-            height: 100,
-            width: 100,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.primaryColor,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Icon(
-                Icons.person,
-                color: AppColors.secondaryColor,
-                size: 50,
+          GestureDetector(
+            onTap: () {
+              Get.to(ProfilePage());
+            },
+            child: Container(
+              height: 100,
+              width: 100,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.primaryColor,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Icon(
+                  Icons.person,
+                  color: AppColors.secondaryColor,
+                  size: 50,
+                ),
               ),
             ),
           ),
@@ -64,6 +71,18 @@ class CustomDrawer extends StatelessWidget {
                 ),
                 name: Text(
                   "About",
+                  style: TextStyle(color: AppColors.secondaryColor),
+                ),
+              )),
+          TextButton(
+              onPressed: () {},
+              child: IconLogo(
+                icon: Icon(
+                  Icons.settings,
+                  color: AppColors.secondaryColor,
+                ),
+                name: Text(
+                  "Settings",
                   style: TextStyle(color: AppColors.secondaryColor),
                 ),
               )),
