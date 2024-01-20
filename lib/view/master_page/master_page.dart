@@ -7,7 +7,8 @@ import 'package:leger_manager/view/master_page/master_page_pages/customer_page.d
 import 'package:leger_manager/view/master_page/master_page_components/drawer.dart';
 import 'package:leger_manager/view/master_page/master_page_pages/supplier_page.dart';
 
-class MasterPage extends StatefulWidget {
+class MasterPage extends StatefulWidget 
+{
   const MasterPage({Key? key}) : super(key: key);
 
   @override
@@ -19,7 +20,8 @@ class _MasterPageState extends State<MasterPage> {
   int _currentPageIndex = 0;
 
   @override
-  void initState() {
+  void initState() 
+  {
     super.initState();
     _pageController = PageController(initialPage: _currentPageIndex);
   }
