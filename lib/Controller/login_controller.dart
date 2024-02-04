@@ -67,67 +67,41 @@ class LoginController extends GetxController {
     }
   }
 
-  Future<void> addMobileNumber() async {
-    String mobileNumber = mobileno.text;
-
-    if (mobileNumber.length == 10) {
-      try {
-        var docSnapshot = await FirebaseFirestore.instance
-            .collection('shop_keeper')
-            .doc(mobileNumber)
-            .get();
-
-        if (docSnapshot.exists) {
-          Get.snackbar(
-            'Error',
-            'Mobile number already exists!',
-            snackPosition: SnackPosition.BOTTOM,
-            duration: Duration(seconds: 3),
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-          );
-        } else {
-          sendOTP(mobileNumber);
-          await FirebaseFirestore.instance
-              .collection('shop_keeper')
-              .doc(mobileNumber)
-              .set({
-            'mobileno': mobileNumber,
-          });
-
-          Get.snackbar(
-            'Success',
-            'Mobile number added!',
-            snackPosition: SnackPosition.BOTTOM,
-            duration: Duration(seconds: 3),
-            backgroundColor: AppColors.primaryColor,
-            colorText: Colors.black,
-          );
-        }
-      } catch (e) {
-        print('Error adding mobile number to Firestore: $e');
+  void postCustomer(String phonenumber) async {
+    try {
+      if (phonenumber.isEmpty) {
+        return;
       }
-    } else {
-      
-      Get.snackbar(
-        'Error',
-        'Mobile number should be 10 digits!',
-        snackPosition: SnackPosition.BOTTOM,
-        duration: Duration(seconds: 3),
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+
+      Map<String, dynamic> customerData = {
+        'contactinfo': phonenumber,
+      };
+
+      String jsonData = json.encode(customerData);
+
+      final response = await http.post(
+        Uri.parse(
+            'https://1kv5glweui.execute-api.ap-south-1.amazonaws.com/development/insertshop'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonData,
       );
+
+      if (response.statusCode == 200) {
+        print('Shopkeeper added successfully');
+      } else {
+        print('Error adding customer: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error: $error');
     }
   }
 
-  void incorrectOTP() {
-    Get.snackbar(
-      'OOPS',
-      'Your OTP is Incorrect',
-      snackPosition: SnackPosition.BOTTOM,
-      duration: Duration(seconds: 3),
-      backgroundColor: Colors.red,
-      colorText: Colors.black,
-    );
+  Future<void> addMobileNumber() async {
+    String mobileNumber = mobileno.text;
+
+    postCustomer(mobileNumber);
+    sendOTP(mobileNumber);
+    Get.to(OTPVerification(
+        generatedOtp: generatedOtp, mobileNumber: mobileNumber));
   }
 }

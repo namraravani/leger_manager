@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:leger_manager/Classes/customer.dart';
+import 'package:leger_manager/Components/icon_logo.dart';
 import 'package:leger_manager/Controller/customer_controller.dart';
 import 'package:leger_manager/view/master_page/master_page_pages/customer_page.dart';
+import 'package:leger_manager/view/test_contact_view.dart';
 
 class CustomerListPage extends StatefulWidget {
   @override
@@ -34,13 +36,27 @@ class _CustomerListPageState extends State<CustomerListPage> {
               keyboardType: TextInputType.phone,
             ),
             SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                // customercontroller.addCustomer();
-                customercontroller.postCustomer();
-                // Get.off(CustomerPage());
-              },
-              child: Text('Add Customer'),
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    // customercontroller.addCustomer();
+                    customercontroller.postCustomer();
+                    // Get.off(CustomerPage());
+                  },
+                  child: Text('Add Customer'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    // customercontroller.addCustomer();
+                    Get.off(ContactViewPage());
+                    // Get.off(CustomerPage());
+                  },
+                  child: IconLogo(
+                      icon: Icon(Icons.contact_phone),
+                      name: Text("Add From Contacts")),
+                ),
+              ],
             ),
             SizedBox(height: 16.0),
           ],

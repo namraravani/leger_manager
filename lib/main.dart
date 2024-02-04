@@ -5,15 +5,11 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:leger_manager/firebase_options.dart';
 import 'package:leger_manager/view/login_page.dart';
 import 'package:leger_manager/view/master_page/master_page.dart';
+import 'package:leger_manager/view/master_page/master_page_pages/customer_page.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-  options: DefaultFirebaseOptions.currentPlatform,
-);
+void main() {
   runApp(MyApp());
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -24,7 +20,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white10),
         useMaterial3: true,
       ),
       home: MasterPage(),

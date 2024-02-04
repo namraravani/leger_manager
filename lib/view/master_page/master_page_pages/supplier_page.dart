@@ -40,7 +40,7 @@ class SupplierPage extends StatelessWidget {
             child: FloatingActionButton(
               backgroundColor: AppColors.primaryColor,
               onPressed: () async {
-                Get.to(CustomerListPage());
+                
               },
               child: Icon(Icons.person_add_alt_1),
             ),

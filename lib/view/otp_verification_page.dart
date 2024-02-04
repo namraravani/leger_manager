@@ -107,7 +107,7 @@ class _OTPVerificationState extends State<OTPVerification> {
                     if (enteredOTP == generatedOTP.value) {
                       Get.off(MasterPage());
                     } else {
-                      loginController.incorrectOTP();
+                      // loginController.incorrectOTP();
                     }
                   },
                 ),

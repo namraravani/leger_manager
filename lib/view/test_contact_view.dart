@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:leger_manager/Components/app_colors.dart';
+import 'package:leger_manager/Controller/customer_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:contacts_service/contacts_service.dart';
 
@@ -12,6 +14,7 @@ class ContactViewPage extends StatefulWidget {
 }
 
 class _ContactViewPageState extends State<ContactViewPage> {
+  CustomerController customercontroller = Get.find<CustomerController>();
   List<Contact> contacts = [];
   List<Contact> contactsFiltered = [];
   TextEditingController searchController = TextEditingController();
@@ -114,8 +117,10 @@ class _ContactViewPageState extends State<ContactViewPage> {
 
                   return ListTile(
                     onTap: () {
-                      // Print the data to the console when a contact is clicked
                       printContactData(contact);
+                      customercontroller.postCustomerFromContact(
+                          contact.displayName ?? "No name",
+                          phoneNumber);
                     },
                     title: Text(contact.displayName ?? ""),
                     subtitle: Text(phoneNumber),
@@ -136,16 +141,15 @@ class _ContactViewPageState extends State<ContactViewPage> {
       ),
     );
   }
-}
 
-void printContactData(Contact contact) {
-  print("Contact Name: ${contact.displayName ?? "No name"}");
+  void printContactData(Contact contact) {
+    print("Contact Name: ${contact.displayName ?? "No name"}");
 
-  if (contact.phones?.isNotEmpty == true) {
-    print(
-        "Phone Number: ${contact.phones!.elementAt(0).value ?? "No phone number"}");
-  } else {
-    print("No phone number");
+    if (contact.phones?.isNotEmpty == true) {
+      print(
+          "Phone Number: ${contact.phones!.elementAt(0).value ?? "No phone number"}");
+    } else {
+      print("No phone number");
+    }
   }
-
 }
