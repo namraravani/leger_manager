@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:leger_manager/Components/app_colors.dart';
 import 'package:leger_manager/view/contact_view.dart';
+import 'package:leger_manager/view/master_page/master_page_pages/Customer_add.dart';
 import 'package:leger_manager/view/test_contact_view.dart';
 import 'package:lottie/lottie.dart';
 import 'package:http/http.dart' as http;
@@ -39,7 +40,7 @@ class SupplierPage extends StatelessWidget {
             child: FloatingActionButton(
               backgroundColor: AppColors.primaryColor,
               onPressed: () async {
-                Get.to(TestContactApp());
+                Get.to(CustomerListPage());
               },
               child: Icon(Icons.person_add_alt_1),
             ),

@@ -18,7 +18,7 @@ class LoginController extends GetxController {
   }
 
   void sendOTP(String mob_no) async {
-    String apiKey = 'bf8bd5d7-a4b9-11ee-8cbb-0200cd936042';
+    String apiKey = '872b4901-c1d0-11ee-8cbb-0200cd936042';
     String mobileno = mob_no;
 
     final Uri url =

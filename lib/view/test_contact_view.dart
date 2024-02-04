@@ -1,16 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:leger_manager/Components/app_colors.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:contacts_service/contacts_service.dart';
 
-class TestContactApp extends StatefulWidget {
-  const TestContactApp({super.key});
+class ContactViewPage extends StatefulWidget {
+  const ContactViewPage({super.key});
 
   @override
-  State<TestContactApp> createState() => _TestContactAppState();
+  State<ContactViewPage> createState() => _ContactViewPageState();
 }
 
-class _TestContactAppState extends State<TestContactApp> {
+class _ContactViewPageState extends State<ContactViewPage> {
   List<Contact> contacts = [];
   List<Contact> contactsFiltered = [];
   TextEditingController searchController = TextEditingController();
@@ -71,18 +72,29 @@ class _TestContactAppState extends State<TestContactApp> {
         child: Column(
           children: <Widget>[
             Container(
-              child: TextField(
-                controller: searchController,
-                decoration: InputDecoration(
-                  labelText: 'Search',
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Theme.of(context).primaryColor,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: TextField(
+                  controller: searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Search by name',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: BorderSide(
+                        width: 1.0,
+                      ),
                     ),
-                  ),
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Theme.of(context).primaryColor,
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: BorderSide(
+                        color: AppColors.secondaryColor,
+                        width: 2.0,
+                      ),
+                    ),
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: AppColors.primaryColor,
+                    ),
                   ),
                 ),
               ),
@@ -101,13 +113,20 @@ class _TestContactAppState extends State<TestContactApp> {
                       : "No phone number";
 
                   return ListTile(
+                    onTap: () {
+                      // Print the data to the console when a contact is clicked
+                      printContactData(contact);
+                    },
                     title: Text(contact.displayName ?? ""),
                     subtitle: Text(phoneNumber),
-                    leading: (contact.avatar != null && contact.avatar!.length > 0) ?
-                    CircleAvatar(
-                      backgroundImage: MemoryImage(contact.avatar!),
-                    ) : 
-                    CircleAvatar(child: Text(contact.initials()),)
+                    leading:
+                        (contact.avatar != null && contact.avatar!.length > 0)
+                            ? CircleAvatar(
+                                backgroundImage: MemoryImage(contact.avatar!),
+                              )
+                            : CircleAvatar(
+                                child: Text(contact.initials()),
+                              ),
                   );
                 },
               ),
@@ -117,4 +136,16 @@ class _TestContactAppState extends State<TestContactApp> {
       ),
     );
   }
+}
+
+void printContactData(Contact contact) {
+  print("Contact Name: ${contact.displayName ?? "No name"}");
+
+  if (contact.phones?.isNotEmpty == true) {
+    print(
+        "Phone Number: ${contact.phones!.elementAt(0).value ?? "No phone number"}");
+  } else {
+    print("No phone number");
+  }
+
 }
