@@ -103,31 +103,28 @@ class GivenPage extends StatelessWidget {
             ),
             onPressed: () async {
               if (transcationcontroller.data.text.isNotEmpty) {
-                num amt; // Declare amt here
+                num amt; 
 
                 try {
                   String textValue = transcationcontroller.data.text;
 
-                  // Check if the input is not empty
+                  
                   if (textValue.isNotEmpty) {
                     amt = num.parse(textValue);
-                    // Now you can use the 'amt' variable as a numeric value
+                    
                     print("Numeric value: $amt");
                   } else {
                     print("Input is empty");
-                    return; // Exit the onPressed method if input is empty
+                    return; 
                   }
                 } catch (e) {
-                  // Handle the case where the text is not a valid number
+                  
                   print(
                       "Invalid input: ${transcationcontroller.data.text} is not a valid number");
-                  return; // Exit the onPressed method if input is not a valid number
+                  return; 
                 }
 
-                transcationcontroller.transcationlist.add(Transcation(
-                  data: transcationcontroller.data.text,
-                  variable: 1,
-                ));
+                
 
                 transcationcontroller.data.clear();
 
@@ -142,7 +139,7 @@ class GivenPage extends StatelessWidget {
                   shop_id.toString(),
                   cust_id.toString(),
                   amt,
-                  'Given',
+                  '1',
                 );
 
                 Get.off(TransactionPage(

@@ -55,26 +55,26 @@ class TransactionPage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final transaction =
                       transcationcontroller.transcationlist[index];
-
+                  // formatDate(transcationcontroller.transcationlist[index]);
                   return Container(
                     height: 100,
                     child: ListTile(
                       title: Row(
-                        mainAxisAlignment: transaction.variable == 1
+                        mainAxisAlignment: transaction.variable == '1'
                             ? MainAxisAlignment.end
                             : MainAxisAlignment.start,
                         children: [
                           Container(
                               padding: EdgeInsets.all(8.0),
                               decoration: BoxDecoration(
-                                color: transaction.variable == 1
+                                color: transaction.variable == '1'
                                     ? Colors.red
                                     : Colors.green,
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               child: Row(
                                 children: [
-                                  transaction.variable == 1
+                                  transaction.variable == '1'
                                       ? Icon(Icons.arrow_upward)
                                       : Icon(Icons.arrow_downward),
                                   Icon(
@@ -90,7 +90,8 @@ class TransactionPage extends StatelessWidget {
                                     width: 20,
                                   ),
                                   Text(
-                                    DateFormat.jm().format(DateTime.now()),
+                                    transcationcontroller.formatTime(
+                                        transaction.transcationTime),
                                     style: TextStyle(
                                         fontSize: 16, color: Colors.white),
                                   ),

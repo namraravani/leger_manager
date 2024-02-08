@@ -4,6 +4,7 @@ import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:leger_manager/Classes/Transcation.dart';
 import 'package:http/http.dart' as http;
 
@@ -39,7 +40,6 @@ class TranscationController extends GetxController {
         },
         body: jsonEncode({
           "contactinfo": yourStringData,
-          // Add more key-value pairs as needed
         }),
       );
 
@@ -57,6 +57,38 @@ class TranscationController extends GetxController {
     }
   }
 
+  
+
+String formatTime(String originalTimeString) {
+  try {
+    
+    DateTime originalTime = DateTime.parse(originalTimeString);
+
+    
+    String formattedTime = DateFormat('h:mm a').format(originalTime);
+
+    return formattedTime;
+  } catch (e) {
+    
+    print("Error formatting time: $e");
+    return "Invalid Time";
+  }
+}
+
+String formatDate(String originalTimeString) {
+  try {
+    
+    DateTime originalTime = DateTime.parse(originalTimeString);
+    String formattedDate = DateFormat('yyyy-MM-dd').format(originalTime);
+    return formattedDate;
+  } catch (e) {
+    
+    print("Error formatting date: $e");
+    return "Invalid Date";
+  }
+}
+
+
   Future<int> getCustomerID(String yourStringData) async {
     String apiUrl =
         'https://1kv5glweui.execute-api.ap-south-1.amazonaws.com/development/fetchcustomerid';
@@ -69,7 +101,6 @@ class TranscationController extends GetxController {
         },
         body: jsonEncode({
           "contactinfo": yourStringData,
-          // Add more key-value pairs as needed
         }),
       );
 
@@ -90,17 +121,15 @@ class TranscationController extends GetxController {
       String shopid, String customer_id, num amt, String type) async {
     print("Post customer method is called");
     try {
-      
       if (shopid.isEmpty || customer_id.isEmpty || type.isEmpty) {
         print("Empty Data");
         return;
       }
-      // num a = 5;
-      
+
       Map<String, dynamic> customerData = {
         'customerid': customer_id,
         'amount': amt,
-        'type':type,
+        'type': type,
         'shopid': shopid,
       };
 
@@ -119,13 +148,52 @@ class TranscationController extends GetxController {
       print(jsonData);
       if (response.statusCode == 200) {
         print("data added in trnascation Sucessfully");
-
-        // print('Customer added successfully');
       } else {
         print('Error adding customer: ${response.statusCode}');
       }
     } catch (error) {
       print('Error: $error');
+    }
+  }
+
+  void getAlltranscation(int shopid, int customer_id) async {
+    String apiUrl =
+        'https://1kv5glweui.execute-api.ap-south-1.amazonaws.com/development/gettranscationbyid';
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          "custid": customer_id,
+          "shop_id": shopid,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonData = json.decode(response.body);
+
+        List<Transcation> transcationList = jsonData
+            .map((transaction) => Transcation.fromJson(transaction))
+            .toList();
+
+        transcationlist.assignAll(transcationList);
+
+        for(int i=0;i<transcationList.length;i++)
+        {
+          print(transcationList[i].transcationTime);
+        }
+
+        
+      } else {
+        print(
+            "Failed to get transactions. Status Code: ${response.statusCode}");
+      }
+    } catch (error) {
+      print("Error: $error");
+      // Handle other exceptions here
     }
   }
 }

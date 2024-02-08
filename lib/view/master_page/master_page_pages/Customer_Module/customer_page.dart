@@ -9,13 +9,15 @@ import 'package:leger_manager/Components/icon_logo.dart';
 import 'package:leger_manager/Controller/customer_controller.dart';
 import 'package:leger_manager/Controller/login_controller.dart';
 import 'package:leger_manager/Controller/test_controller.dart';
+import 'package:leger_manager/Controller/transcation_controller.dart';
 import 'package:leger_manager/view/master_page/master_page_pages/Customer_Module/Customer_add.dart';
 import 'package:leger_manager/view/master_page/master_page_pages/Transcation_module/transaction_page.dart';
 import 'package:leger_manager/view/test_contact_view.dart';
 import 'package:lottie/lottie.dart';
 
 class CustomerPage extends StatelessWidget {
-  final TestController testController = Get.put(TestController());
+  final TranscationController transactioncontroller =
+      Get.put(TranscationController());
   final CustomerController customercontroller = Get.put(CustomerController());
 
   @override
@@ -54,7 +56,14 @@ class CustomerPage extends StatelessWidget {
           return Column(
             children: [
               ListTile(
-                onTap: () {
+                onTap: () async {
+                  int shop_id =
+                      await transactioncontroller.getShopId("9427662325");
+                  int cust_id = await transactioncontroller.getCustomerID(
+                      customercontroller.customerlist[index].contactInfo);
+                  print(shop_id);
+                  print("Hello this is customer id" + "${cust_id}");
+                  transactioncontroller.getAlltranscation(shop_id, cust_id);
                   Get.to(TransactionPage(
                     customerName:
                         customercontroller.customerlist[index].customerName,
