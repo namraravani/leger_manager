@@ -9,8 +9,8 @@ import 'package:leger_manager/Components/icon_logo.dart';
 import 'package:leger_manager/Controller/customer_controller.dart';
 import 'package:leger_manager/Controller/login_controller.dart';
 import 'package:leger_manager/Controller/test_controller.dart';
-import 'package:leger_manager/view/master_page/master_page_pages/Customer_add.dart';
-import 'package:leger_manager/view/master_page/master_page_pages/transaction_page.dart';
+import 'package:leger_manager/view/master_page/master_page_pages/Customer_Module/Customer_add.dart';
+import 'package:leger_manager/view/master_page/master_page_pages/Transcation_module/transaction_page.dart';
 import 'package:leger_manager/view/test_contact_view.dart';
 import 'package:lottie/lottie.dart';
 

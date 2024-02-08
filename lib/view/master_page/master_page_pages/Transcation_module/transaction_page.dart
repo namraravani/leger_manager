@@ -6,8 +6,8 @@ import 'package:leger_manager/Components/app_colors.dart';
 import 'package:leger_manager/Components/icon_logo.dart';
 import 'package:leger_manager/Components/text_logo.dart';
 import 'package:leger_manager/Controller/transcation_controller.dart';
-import 'package:leger_manager/view/master_page/master_page_pages/GivenPage.dart';
-import 'package:leger_manager/view/master_page/master_page_pages/ReceviedPage.dart';
+import 'package:leger_manager/view/master_page/master_page_pages/Transcation_module/GivenPage.dart';
+import 'package:leger_manager/view/master_page/master_page_pages/Transcation_module/ReceviedPage.dart';
 import 'package:lottie/lottie.dart';
 
 class TransactionPage extends StatelessWidget {
@@ -27,7 +27,7 @@ class TransactionPage extends StatelessWidget {
       appBar: AppBar(
         title: Row(
           children: [
-            InitialsAvatar(name: customerName),
+            InitialsAvatar(name: customerName ?? ''),
             SizedBox(
               width: 10,
             ),
@@ -90,8 +90,7 @@ class TransactionPage extends StatelessWidget {
                                     width: 20,
                                   ),
                                   Text(
-                                    DateFormat.jm().format(DateTime
-                                        .now()), 
+                                    DateFormat.jm().format(DateTime.now()),
                                     style: TextStyle(
                                         fontSize: 16, color: Colors.white),
                                   ),
@@ -119,7 +118,10 @@ class TransactionPage extends StatelessWidget {
                       minimumSize: Size(120, 40),
                     ),
                     onPressed: () {
-                      Get.to(ReceviedPage());
+                      Get.off(ReceviedPage(
+                        customerName: customerName,
+                        customerInfo: contactinfo,
+                      ));
                     },
                     child: IconLogo(
                       icon: Icon(Icons.arrow_downward),
@@ -136,7 +138,10 @@ class TransactionPage extends StatelessWidget {
                       minimumSize: Size(120, 40),
                     ),
                     onPressed: () {
-                      Get.to((GivenPage()));
+                      Get.off((GivenPage(
+                        customerName: customerName,
+                        customerInfo: contactinfo,
+                      )));
                     },
                     child: IconLogo(
                       icon: Icon(Icons.arrow_upward),

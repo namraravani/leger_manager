@@ -6,16 +6,24 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:leger_manager/Components/app_colors.dart';
 import 'package:http/http.dart' as http;
+import 'package:leger_manager/Controller/transcation_controller.dart';
 import 'package:leger_manager/view/otp_verification_page.dart';
 
 class LoginController extends GetxController {
   final TextEditingController mobileno = TextEditingController();
   final TextEditingController otpcontroller = TextEditingController();
   final TextEditingController EnteredOtpController = TextEditingController();
+  TranscationController transactioncontroller = Get.put(TranscationController());
   RxString generatedOtp = ''.obs;
   void updateOtp(String newOtp) {
     generatedOtp.value = newOtp;
   }
+  Future<void> addMobileNumber1() async {
+    String mobileNumber = mobileno.text;
+
+    transactioncontroller.setMobileNumber(mobileNumber);
+  }
+  
 
   void sendOTP(String mob_no) async {
     String apiKey = '872b4901-c1d0-11ee-8cbb-0200cd936042';

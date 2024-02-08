@@ -117,10 +117,9 @@ class _ContactViewPageState extends State<ContactViewPage> {
 
                   return ListTile(
                     onTap: () {
-                      printContactData(contact);
                       customercontroller.postCustomerFromContact(
-                          contact.displayName ?? "No name",
-                          phoneNumber);
+                          contact.displayName ?? "No name", phoneNumber);
+                    
                     },
                     title: Text(contact.displayName ?? ""),
                     subtitle: Text(phoneNumber),
@@ -140,16 +139,5 @@ class _ContactViewPageState extends State<ContactViewPage> {
         ),
       ),
     );
-  }
-
-  void printContactData(Contact contact) {
-    print("Contact Name: ${contact.displayName ?? "No name"}");
-
-    if (contact.phones?.isNotEmpty == true) {
-      print(
-          "Phone Number: ${contact.phones!.elementAt(0).value ?? "No phone number"}");
-    } else {
-      print("No phone number");
-    }
   }
 }
