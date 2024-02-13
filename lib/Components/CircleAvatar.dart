@@ -1,19 +1,26 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class InitialsAvatar extends StatelessWidget {
   final String name;
+  static const String colorKey = 'avatarColor';
+  static const Color defaultColor = Colors.blue; // Default color if no color is stored
+  Color? cachedRandomColor;
 
   InitialsAvatar({required this.name});
 
   @override
   Widget build(BuildContext context) {
     String initials = getInitials(name);
-    Color randomColor = getRandomColor();
+
+    if (cachedRandomColor == null) {
+      cachedRandomColor = fetchStoredColor() ?? getRandomColor();
+      storeColor(cachedRandomColor!);
+    }
 
     return CircleAvatar(
-      backgroundColor: randomColor,
+      backgroundColor: cachedRandomColor,
       child: Text(
         initials,
         style: TextStyle(color: Colors.white),
@@ -37,5 +44,27 @@ class InitialsAvatar extends StatelessWidget {
     int b = random.nextInt(256);
 
     return Color.fromARGB(255, r, g, b);
+  }
+
+  Color? fetchStoredColor() {
+  SharedPreferences? prefs;
+  Color? storedColor;
+
+  getStorageInstance().then((value) {
+    prefs = value;
+    int? storedColorValue = prefs?.getInt(colorKey);
+    storedColor = storedColorValue != null ? Color(storedColorValue) : null;
+  });
+
+  return storedColor;
+}
+
+  Future<void> storeColor(Color color) async {
+    SharedPreferences prefs = await getStorageInstance();
+    prefs.setInt(colorKey, color.value);
+  }
+
+  Future<SharedPreferences> getStorageInstance() async {
+    return await SharedPreferences.getInstance();
   }
 }

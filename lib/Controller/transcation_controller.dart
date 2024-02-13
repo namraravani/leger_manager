@@ -57,37 +57,40 @@ class TranscationController extends GetxController {
     }
   }
 
-  
+  String formatTime(String originalTimeString) {
+    try {
+      DateTime originalTime = DateTime.parse(originalTimeString);
 
-String formatTime(String originalTimeString) {
-  try {
-    
-    DateTime originalTime = DateTime.parse(originalTimeString);
+      String formattedTime = DateFormat('h:mm a').format(originalTime);
 
-    
-    String formattedTime = DateFormat('h:mm a').format(originalTime);
-
-    return formattedTime;
-  } catch (e) {
-    
-    print("Error formatting time: $e");
-    return "Invalid Time";
+      return formattedTime;
+    } catch (e) {
+      print("Error formatting time: $e");
+      return "Invalid Time";
+    }
   }
-}
 
-String formatDate(String originalTimeString) {
-  try {
-    
-    DateTime originalTime = DateTime.parse(originalTimeString);
-    String formattedDate = DateFormat('yyyy-MM-dd').format(originalTime);
-    return formattedDate;
-  } catch (e) {
-    
-    print("Error formatting date: $e");
-    return "Invalid Date";
+  String formatDate(String originalTimeString) {
+    try {
+      DateTime originalTime = DateTime.parse(originalTimeString);
+      String formattedDate = DateFormat('yyyy-MM-dd').format(originalTime);
+      return formattedDate;
+    } catch (e) {
+      print("Error formatting date: $e");
+      return "Invalid Date";
+    }
   }
-}
 
+  DateTime DisplayDay(String originalTimeString) {
+    try {
+      DateTime originalTime = DateTime.parse(originalTimeString);
+      // String formattedDate = DateFormat('yyyy-MM-dd').format(originalTime);
+      return originalTime;
+    } catch (e) {
+      print("Error formatting date: $e");
+      return DateTime.now();
+    }
+  }
 
   Future<int> getCustomerID(String yourStringData) async {
     String apiUrl =
@@ -106,14 +109,47 @@ String formatDate(String originalTimeString) {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        int shopId = responseData['customerId'];
-        return shopId;
+        int customer_id = responseData['customerId'];
+        return customer_id;
       } else {
         throw Exception(
-            'Failed to get shopId. Status Code: ${response.statusCode}');
+            'Failed to get customer id. Status Code: ${response.statusCode}');
       }
     } catch (error) {
       throw Exception('Error: $error');
+    }
+  }
+
+  Future<void> maintainRelation(int shop_id,int customerid) async {
+    try {
+       // Replace with your actual value
+      // int customer_id = await getCustomerID(_customerInfo);
+
+
+      Map<String, dynamic> customerData = {
+        "custid":customerid,
+        "shop_id": shop_id,
+      };
+
+      String jsonData = json.encode(customerData);
+
+      // print("Hello I am heree this i s afa Shop Id" + "${shop_id}");
+
+      const apiUrl =
+          'https://1kv5glweui.execute-api.ap-south-1.amazonaws.com/development/insertRelation';
+
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        body: jsonData
+      );
+
+      if (response.statusCode == 200) {
+        print('Relation inserted successfully: ${response.body}');
+      } else {
+        print('Error while ajgnsjgndgjdsngsdjnsdkjfnk inserting relation: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error while Hello i am namta inserting relation: $error');
     }
   }
 
@@ -147,6 +183,9 @@ String formatDate(String originalTimeString) {
       );
       print(jsonData);
       if (response.statusCode == 200) {
+        int intValue1 = int.parse(shopid);
+        int intValue2 = int.parse(customer_id);
+        getAlltranscation(intValue1, intValue2);
         print("data added in trnascation Sucessfully");
       } else {
         print('Error adding customer: ${response.statusCode}');
@@ -181,12 +220,9 @@ String formatDate(String originalTimeString) {
 
         transcationlist.assignAll(transcationList);
 
-        for(int i=0;i<transcationList.length;i++)
-        {
+        for (int i = 0; i < transcationList.length; i++) {
           print(transcationList[i].transcationTime);
         }
-
-        
       } else {
         print(
             "Failed to get transactions. Status Code: ${response.statusCode}");

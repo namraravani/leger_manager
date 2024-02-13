@@ -3,22 +3,28 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:leger_manager/Components/app_colors.dart';
 import 'package:leger_manager/Controller/customer_controller.dart';
+import 'package:leger_manager/Controller/supplier_controller.dart';
+import 'package:leger_manager/Controller/transcation_controller.dart';
+import 'package:leger_manager/view/master_page/master_page_pages/Transcation_module/transaction_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:contacts_service/contacts_service.dart';
 
-class ContactViewPage extends StatefulWidget {
-  const ContactViewPage({super.key});
+class SupplierViewPage extends StatefulWidget {
+  const SupplierViewPage({super.key});
 
   @override
-  State<ContactViewPage> createState() => _ContactViewPageState();
+  State<SupplierViewPage> createState() => _SupplierViewPageState();
 }
 
-class _ContactViewPageState extends State<ContactViewPage> {
-  CustomerController customercontroller = Get.find<CustomerController>();
+class _SupplierViewPageState extends State<SupplierViewPage> {
+  SupplierController suppliercontroller = Get.find<SupplierController>();
+  TranscationController transcationcontroller =
+      Get.find<TranscationController>();
   List<Contact> contacts = [];
   List<Contact> contactsFiltered = [];
   TextEditingController searchController = TextEditingController();
   bool contactsLoaded = false;
+  bool onTapExecuted = false;
 
   @override
   void initState() {
@@ -116,10 +122,26 @@ class _ContactViewPageState extends State<ContactViewPage> {
                       : "No phone number";
 
                   return ListTile(
-                    onTap: () {
-                      customercontroller.postCustomerFromContact(
-                          contact.displayName ?? "No name", phoneNumber);
-                    
+                    onTap: () async {
+                      if (!onTapExecuted) {
+                        onTapExecuted = true;
+
+                        int shop_id =
+                            await transcationcontroller.getShopId("9427662325");
+                        
+                        suppliercontroller.postSupplierfromContact(shop_id,
+                            contact.displayName ?? "No name", phoneNumber);
+
+                        int cust_id = await transcationcontroller
+                            .getCustomerID(phoneNumber);
+
+                        transcationcontroller.maintainRelation(
+                            shop_id, cust_id);
+
+                        Get.off(TransactionPage(
+                            customerName: contact.displayName ?? "No name",
+                            contactinfo: phoneNumber));
+                      }
                     },
                     title: Text(contact.displayName ?? ""),
                     subtitle: Text(phoneNumber),

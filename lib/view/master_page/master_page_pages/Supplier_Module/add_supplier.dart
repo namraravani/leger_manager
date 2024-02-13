@@ -1,27 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:leger_manager/Classes/customer.dart';
 import 'package:leger_manager/Components/icon_logo.dart';
-import 'package:leger_manager/Controller/customer_controller.dart';
+import 'package:leger_manager/Controller/supplier_controller.dart';
 import 'package:leger_manager/Controller/transcation_controller.dart';
-import 'package:leger_manager/view/master_page/master_page_pages/Customer_Module/customer_page.dart';
-import 'package:leger_manager/view/master_page/master_page_pages/Customer_Module/test_contact_view.dart';
+import 'package:leger_manager/view/master_page/master_page_pages/Supplier_Module/contact_view_supplier.dart';
 
-class CustomerListPage extends StatefulWidget {
-  @override
-  _CustomerListPageState createState() => _CustomerListPageState();
-}
-
-class _CustomerListPageState extends State<CustomerListPage> {
-  CustomerController customercontroller = Get.find<CustomerController>();
+class SupplierAddPage extends StatelessWidget {
+  SupplierAddPage({super.key});
   TranscationController transcationcontroller =
       Get.find<TranscationController>();
-
   @override
   Widget build(BuildContext context) {
+    SupplierController suppliercontroller = Get.put(SupplierController());
     return Scaffold(
       appBar: AppBar(
-        title: Text('Customer List'),
+        title: Text('SupplierAdd'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -29,12 +22,12 @@ class _CustomerListPageState extends State<CustomerListPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
-              controller: customercontroller.customername,
+              controller: suppliercontroller.supplier_name,
               decoration: InputDecoration(labelText: 'Name'),
             ),
             SizedBox(height: 16.0),
             TextField(
-              controller: customercontroller.customerinfo,
+              controller: suppliercontroller.supplier_contact_info,
               decoration: InputDecoration(labelText: 'Phone Number'),
               keyboardType: TextInputType.phone,
             ),
@@ -43,21 +36,22 @@ class _CustomerListPageState extends State<CustomerListPage> {
               children: [
                 ElevatedButton(
                   onPressed: () async {
-                    // customercontroller.addCustomer();
-                    customercontroller.postCustomer();
+                    int shop_id =
+                        await transcationcontroller.getShopId("9427662325");
+                    suppliercontroller.postSupplier(shop_id);
+                    
                     transcationcontroller.maintainRelation(
                         await transcationcontroller.getShopId("9427662325"),
                         await transcationcontroller.getCustomerID(
-                            customercontroller.customerinfo.text));
-                    // Get.off(CustomerPage());
+                            suppliercontroller.supplier_contact_info.text));
                   },
-                  child: Text('Add Customer'),
+                  child: Text('Add Supplier'),
                 ),
                 TextButton(
                   onPressed: () {
                     // customercontroller.addCustomer();
-                    Get.off(ContactViewPage());
-                    // Get.off(CustomerPage());
+                    // Get.off(ContactViewPage());
+                    Get.off(SupplierViewPage());
                   },
                   child: IconLogo(
                       icon: Icon(Icons.contact_phone),

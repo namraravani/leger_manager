@@ -23,6 +23,7 @@ class TransactionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool yesterdaythere = false;
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -55,51 +56,94 @@ class TransactionPage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final transaction =
                       transcationcontroller.transcationlist[index];
-                  // formatDate(transcationcontroller.transcationlist[index]);
-                  return Container(
-                    height: 100,
-                    child: ListTile(
-                      title: Row(
-                        mainAxisAlignment: transaction.variable == '1'
-                            ? MainAxisAlignment.end
-                            : MainAxisAlignment.start,
-                        children: [
-                          Container(
+                  final formattedTransactionDate =
+                      transcationcontroller.DisplayDay(
+                          transaction.transcationTime);
+
+                  
+                  final isToday = DateTime.now()
+                      .toLocal()
+                      .isSameDay(formattedTransactionDate);
+
+                  
+                  final isYesterday = DateTime.now()
+                      .subtract(Duration(days: 1))
+                      .toLocal()
+                      .isSameDay(formattedTransactionDate);
+
+                  return Column(
+                    children: [
+                      isYesterday
+                          ? Container(
                               padding: EdgeInsets.all(8.0),
-                              decoration: BoxDecoration(
-                                color: transaction.variable == '1'
-                                    ? Colors.red
-                                    : Colors.green,
-                                borderRadius: BorderRadius.circular(8.0),
+                              color: Colors.grey[300],
+                              child: Center(
+                                child: Text(
+                                  'Yesterday',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
-                              child: Row(
-                                children: [
-                                  transaction.variable == '1'
-                                      ? Icon(Icons.arrow_upward)
-                                      : Icon(Icons.arrow_downward),
-                                  Icon(
-                                    Icons.currency_rupee_sharp,
-                                    color: Colors.white,
-                                  ),
-                                  Text(
-                                    transaction.data,
-                                    style: TextStyle(
-                                        fontSize: 25, color: Colors.white),
-                                  ),
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  Text(
-                                    transcationcontroller.formatTime(
-                                        transaction.transcationTime),
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.white),
-                                  ),
-                                ],
-                              )),
-                        ],
+                            )
+                          : SizedBox.shrink(),
+                      if (isToday && index == 0)
+                        Container(
+                          padding: EdgeInsets.all(8.0),
+                          color: Colors.grey[300],
+                          child: Center(
+                            child: Text(
+                              'Today',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      Container(
+                        height: 100,
+                        child: ListTile(
+                          title: Row(
+                            mainAxisAlignment: transaction.variable == '1'
+                                ? MainAxisAlignment.end
+                                : MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                  color: transaction.variable == '1'
+                                      ? Colors.red
+                                      : Colors.green,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: Row(
+                                  children: [
+                                    transaction.variable == '1'
+                                        ? Icon(Icons.arrow_upward)
+                                        : Icon(Icons.arrow_downward),
+                                    Icon(
+                                      Icons.currency_rupee_sharp,
+                                      color: Colors.white,
+                                    ),
+                                    Text(
+                                      transaction.data,
+                                      style: TextStyle(
+                                          fontSize: 25, color: Colors.white),
+                                    ),
+                                    SizedBox(width: 20),
+                                    Text(
+                                      transcationcontroller.formatTime(
+                                          transaction.transcationTime),
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   );
                 },
               ),
@@ -156,5 +200,13 @@ class TransactionPage extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+extension DateTimeExtension on DateTime {
+  bool isSameDay(DateTime other) {
+    return this.year == other.year &&
+        this.month == other.month &&
+        this.day == other.day;
   }
 }

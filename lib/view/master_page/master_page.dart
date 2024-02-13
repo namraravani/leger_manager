@@ -5,7 +5,7 @@ import 'package:leger_manager/view/master_page/master_page_components/app-bar.da
 import 'package:leger_manager/view/master_page/master_page_components/bottom_navbar.dart';
 import 'package:leger_manager/view/master_page/master_page_pages/Customer_Module/customer_page.dart';
 import 'package:leger_manager/view/master_page/master_page_components/drawer.dart';
-import 'package:leger_manager/view/master_page/master_page_pages/supplier_page.dart';
+import 'package:leger_manager/view/master_page/master_page_pages/Supplier_Module/supplier_page.dart';
 
 class MasterPage extends StatefulWidget 
 {

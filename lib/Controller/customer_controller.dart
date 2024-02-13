@@ -25,13 +25,14 @@ class CustomerController extends GetxController {
       Map<String, dynamic> customerData = {
         'name': customername.text,
         'contactinfo': customerinfo.text,
+        'type': 1
       };
 
       String jsonData = json.encode(customerData);
 
       final response = await http.post(
         Uri.parse(
-            'https://1kv5glweui.execute-api.ap-south-1.amazonaws.com/development/insertCustomer'), 
+            'https://1kv5glweui.execute-api.ap-south-1.amazonaws.com/development/insertCustomer'),
         headers: {'Content-Type': 'application/json'},
         body: jsonData,
       );
@@ -59,6 +60,7 @@ class CustomerController extends GetxController {
       Map<String, dynamic> customerData = {
         'name': name,
         'contactinfo': Phonenumber,
+        'type': 1
       };
 
       print("data added in map");
@@ -95,16 +97,15 @@ class CustomerController extends GetxController {
       if (response.statusCode == 200) {
         List<dynamic> customerData = json.decode(response.body);
 
-        // Assuming the response is a list of customers
         List<Customer> customers =
             customerData.map((data) => Customer.fromJson(data)).toList();
 
-        // Update the customerlist
         customerlist.assignAll(customers);
         update();
 
         for (int i = 0; i < customerlist.length; i++) {
-          print(customerlist[i].customerName + ' ' + customerlist[i].contactInfo);
+          print(
+              customerlist[i].customerName + ' ' + customerlist[i].contactInfo);
         }
 
         // You might want to update the UI or perform other actions here
