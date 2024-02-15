@@ -93,38 +93,38 @@ class GivenPage extends StatelessWidget {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: Colors.white, 
-              onPrimary: AppColors.redColor, 
+              primary: Colors.white,
+              onPrimary: AppColors.redColor,
               shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(10), 
-                side: BorderSide(color: AppColors.redColor), 
+                borderRadius: BorderRadius.circular(10),
+                side: BorderSide(color: AppColors.redColor),
               ),
             ),
             onPressed: () async {
               if (transcationcontroller.data.text.isNotEmpty) {
-                num amt; 
+                num amt;
 
                 try {
                   String textValue = transcationcontroller.data.text;
 
-                  
                   if (textValue.isNotEmpty) {
                     amt = num.parse(textValue);
-                    
+
                     print("Numeric value: $amt");
                   } else {
                     print("Input is empty");
-                    return; 
+                    return;
                   }
                 } catch (e) {
-                  
                   print(
                       "Invalid input: ${transcationcontroller.data.text} is not a valid number");
-                  return; 
+                  return;
                 }
 
-                
+                Get.off(TransactionPage(
+                  customerName: customerName,
+                  contactinfo: customerInfo,
+                ));
 
                 transcationcontroller.data.clear();
 
@@ -132,8 +132,8 @@ class GivenPage extends StatelessWidget {
 
                 int shop_id =
                     await transcationcontroller.getShopId("9427662325");
-                int cust_id = await transcationcontroller
-                    .getCustomerID(customerInfo);
+                int cust_id =
+                    await transcationcontroller.getCustomerID(customerInfo);
 
                 transcationcontroller.postTranscation(
                   shop_id.toString(),
@@ -141,13 +141,6 @@ class GivenPage extends StatelessWidget {
                   amt,
                   '1',
                 );
-
-                Get.off(TransactionPage(
-                  customerName: customerName,
-                  contactinfo: customerInfo,
-                ));
-
-                
               }
             },
             child: Text("Add"),

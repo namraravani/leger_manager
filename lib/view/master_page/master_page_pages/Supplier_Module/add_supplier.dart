@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:leger_manager/Components/app_colors.dart';
 import 'package:leger_manager/Components/icon_logo.dart';
 import 'package:leger_manager/Controller/supplier_controller.dart';
 import 'package:leger_manager/Controller/transcation_controller.dart';
+import 'package:leger_manager/view/master_page/master_page.dart';
 import 'package:leger_manager/view/master_page/master_page_pages/Supplier_Module/contact_view_supplier.dart';
+import 'package:leger_manager/view/master_page/master_page_pages/Supplier_Module/supplier_page.dart';
 
 class SupplierAddPage extends StatelessWidget {
   SupplierAddPage({super.key});
@@ -36,14 +39,17 @@ class SupplierAddPage extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () async {
+                    Get.back();
                     int shop_id =
                         await transcationcontroller.getShopId("9427662325");
-                    suppliercontroller.postSupplier(shop_id);
-                    
+                    await suppliercontroller.postSupplier(shop_id);
+
                     transcationcontroller.maintainRelation(
                         await transcationcontroller.getShopId("9427662325"),
                         await transcationcontroller.getCustomerID(
                             suppliercontroller.supplier_contact_info.text));
+
+                    await suppliercontroller.getSuppliers(shop_id);
                   },
                   child: Text('Add Supplier'),
                 ),

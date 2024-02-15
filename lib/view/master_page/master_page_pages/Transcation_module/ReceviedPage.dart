@@ -162,6 +162,11 @@ class _ReceviedPageState extends State<ReceviedPage> {
                 //   variable: 0,
                 // ));
 
+                Get.off(TransactionPage(
+                  customerName: widget.customerName,
+                  contactinfo: widget.customerInfo,
+                ));
+
                 transcationcontroller.data.clear();
 
                 String mobileNumber = transcationcontroller.mobileNumber.value;
@@ -178,12 +183,9 @@ class _ReceviedPageState extends State<ReceviedPage> {
                   '0',
                 );
 
-                Get.off(TransactionPage(
-                  customerName: widget.customerName,
-                  contactinfo: widget.customerInfo,
-                ));
+                
 
-                setState(() {});
+                // setState(() {});
               }
             },
             child: Text("Add"),

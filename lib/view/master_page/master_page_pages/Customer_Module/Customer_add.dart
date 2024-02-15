@@ -43,13 +43,16 @@ class _CustomerListPageState extends State<CustomerListPage> {
               children: [
                 ElevatedButton(
                   onPressed: () async {
+                    Get.back();
                     // customercontroller.addCustomer();
                     customercontroller.postCustomer();
                     transcationcontroller.maintainRelation(
                         await transcationcontroller.getShopId("9427662325"),
                         await transcationcontroller.getCustomerID(
                             customercontroller.customerinfo.text));
-                    // Get.off(CustomerPage());
+
+                    customercontroller.customername.clear();
+                    customercontroller.customerinfo.clear();
                   },
                   child: Text('Add Customer'),
                 ),

@@ -27,16 +27,53 @@ class BillingController extends GetxController {
         // Parse the JSON response as a List
         List<dynamic> jsonResponse = json.decode(response.body);
 
-        
         if (jsonResponse.isNotEmpty && jsonResponse[0].containsKey('company')) {
-          
           String company = jsonResponse[0]['company'];
 
           companyList.add(company);
 
           update();
 
-          
+          companyList.forEach((company) {
+            print(company);
+          });
+        } else {
+          print('Error: Invalid JSON structure');
+        }
+      } else {
+        print('Error fetching company: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
+
+  Future<void> updateCompanyList() async {
+    try {
+      // Make an API call to get the updated company list
+      final response = await http.get(
+        Uri.parse(
+          'https://1kv5glweui.execute-api.ap-south-1.amazonaws.com/development/fetchcompany',
+        ),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        // Parse the JSON response as a List
+        List<dynamic> jsonResponse = json.decode(response.body);
+
+        if (jsonResponse.isNotEmpty && jsonResponse[0].containsKey('company')) {
+          List<String> updatedCompanyList = List<String>.from(
+              jsonResponse.map((item) => item['company']));
+
+          // Clear the existing companyList and add the updated companies
+          companyList.clear();
+          companyList.addAll(updatedCompanyList);
+
+          // Update the UI
+          update();
+
+          // Print the updated company list
           companyList.forEach((company) {
             print(company);
           });
@@ -70,7 +107,6 @@ class BillingController extends GetxController {
           List<String> subcategories = List<String>.from(
               jsonResponse.map((item) => item['subcategory']));
 
-          
           categoryList.clear();
           categoryList.addAll(subcategories);
 

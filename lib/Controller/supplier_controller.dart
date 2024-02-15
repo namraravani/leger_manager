@@ -46,7 +46,7 @@ class SupplierController extends GetxController {
     }
   }
 
-  void postSupplier(int shopId) async {
+  Future<void> postSupplier(int shopId) async {
     try {
       if (supplier_name.text.isEmpty || supplier_contact_info.text.isEmpty) {
         return;

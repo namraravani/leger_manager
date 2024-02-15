@@ -60,12 +60,10 @@ class TransactionPage extends StatelessWidget {
                       transcationcontroller.DisplayDay(
                           transaction.transcationTime);
 
-                  
                   final isToday = DateTime.now()
                       .toLocal()
                       .isSameDay(formattedTransactionDate);
 
-                  
                   final isYesterday = DateTime.now()
                       .subtract(Duration(days: 1))
                       .toLocal()
@@ -91,11 +89,17 @@ class TransactionPage extends StatelessWidget {
                         Container(
                           padding: EdgeInsets.all(8.0),
                           color: Colors.grey[300],
-                          child: Center(
+                          child: Container(
+                            width: 50,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
                             child: Text(
                               'Today',
                               style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.secondaryColor),
                             ),
                           ),
                         ),

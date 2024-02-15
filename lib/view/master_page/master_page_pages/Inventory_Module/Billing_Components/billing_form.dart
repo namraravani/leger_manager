@@ -23,27 +23,31 @@ class _BillingFormState extends State<BillingForm> {
         children: [
           Row(
             children: [
-              BillingField(
-                icon: Icons.abc,
-                hintText: "Enter Something",
-                dropdownItems: billingcontroller.companyList,
-                onDataChanged: (data) {
-                  setState(() {
-                    dataList[0] = data;
-                    widget.onDataListChanged(dataList);
-                  });
-                },
+              Obx(
+                () => BillingField(
+                  icon: Icons.abc,
+                  hintText: "Enter Something",
+                  dropdownItems: billingcontroller.companyList.value,
+                  onDataChanged: (data) {
+                    setState(() {
+                      dataList[0] = data;
+                      widget.onDataListChanged(dataList);
+                    });
+                  },
+                ),
               ),
-              BillingField(
-                icon: Icons.category,
-                hintText: "Enter The Sub Category",
-                dropdownItems: billingcontroller.categoryList,
-                onDataChanged: (data) {
-                  setState(() {
-                    dataList[1] = data;
-                    widget.onDataListChanged(dataList);
-                  });
-                },
+              Obx(
+                () => BillingField(
+                  icon: Icons.category,
+                  hintText: "Enter The Sub Category",
+                  dropdownItems: billingcontroller.productList.value,
+                  onDataChanged: (data) {
+                    setState(() {
+                      dataList[1] = data;
+                      widget.onDataListChanged(dataList);
+                    });
+                  },
+                ),
               ),
             ],
           ),
@@ -52,27 +56,31 @@ class _BillingFormState extends State<BillingForm> {
           ),
           Row(
             children: [
-              BillingField(
-                icon: Icons.shopping_bag,
-                hintText: "Enter The Product",
-                dropdownItems: billingcontroller.productList,
-                onDataChanged: (data) {
-                  setState(() {
-                    dataList[2] = data;
-                    widget.onDataListChanged(dataList);
-                  });
-                },
+              Obx(
+                () => BillingField(
+                  icon: Icons.shopping_bag,
+                  hintText: "Enter The Product",
+                  dropdownItems: billingcontroller.productList.value,
+                  onDataChanged: (data) {
+                    setState(() {
+                      dataList[2] = data;
+                      widget.onDataListChanged(dataList);
+                    });
+                  },
+                ),
               ),
-              BillingField(
-                icon: Icons.currency_rupee_sharp,
-                hintText: "Enter The Price",
-                dropdownItems: billingcontroller.productList,
-                onDataChanged: (data) {
-                  setState(() {
-                    dataList[3] = data;
-                    widget.onDataListChanged(dataList);
-                  });
-                },
+              Obx(
+                () => BillingField(
+                  icon: Icons.currency_rupee_sharp,
+                  hintText: "Enter The Price",
+                  dropdownItems: billingcontroller.productList.value,
+                  onDataChanged: (data) {
+                    setState(() {
+                      dataList[3] = data;
+                      widget.onDataListChanged(dataList);
+                    });
+                  },
+                ),
               ),
             ],
           ),

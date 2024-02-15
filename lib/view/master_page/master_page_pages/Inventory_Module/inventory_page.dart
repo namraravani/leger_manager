@@ -73,30 +73,36 @@ class _InventoryPageState extends State<InventoryPage> {
       ),
       body: Column(
         children: [
+          Container(
+            height: 100,
+            child: Expanded(
+              child: ListView.builder(
+                itemCount: dataList.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text("Item ${index + 1}"),
+                    subtitle: Container(
+                      width: 200,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("ABC: ${dataList[index].abc}"),
+                          Text("Category: ${dataList[index].category}"),
+                          Text("Product: ${dataList[index].product}"),
+                          Text("Price: ${dataList[index].price}"),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
           BillingForm(onDataListChanged: handleDataListChange),
           SizedBox(height: 20),
           Text(
               "Data from BillingForm: ${singleData.abc}, ${singleData.category}, ${singleData.product}, ${singleData.price}"),
           SizedBox(height: 20),
-          Expanded(
-            child: ListView.builder(
-              itemCount: dataList.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text("Item ${index + 1}"),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("ABC: ${dataList[index].abc}"),
-                      Text("Category: ${dataList[index].category}"),
-                      Text("Product: ${dataList[index].product}"),
-                      Text("Price: ${dataList[index].price}"),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
           ElevatedButton(
             onPressed: addItemToList,
             child: Text("Add Item to List"),
