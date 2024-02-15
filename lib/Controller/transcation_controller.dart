@@ -109,25 +109,29 @@ class TranscationController extends GetxController {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
+        print(responseData['customerId'] is String);
+        print(responseData['customerId'] is int);
         int customer_id = responseData['customerId'];
+        
         return customer_id;
+        
       } else {
         throw Exception(
             'Failed to get customer id. Status Code: ${response.statusCode}');
       }
     } catch (error) {
+      
       throw Exception('Error: $error');
     }
   }
 
-  Future<void> maintainRelation(int shop_id,int customerid) async {
+  Future<void> maintainRelation(int shop_id, int customerid) async {
     try {
-       // Replace with your actual value
+      // Replace with your actual value
       // int customer_id = await getCustomerID(_customerInfo);
 
-
       Map<String, dynamic> customerData = {
-        "custid":customerid,
+        "custid": customerid,
         "shop_id": shop_id,
       };
 
@@ -138,15 +142,13 @@ class TranscationController extends GetxController {
       const apiUrl =
           'https://1kv5glweui.execute-api.ap-south-1.amazonaws.com/development/insertRelation';
 
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        body: jsonData
-      );
+      final response = await http.post(Uri.parse(apiUrl), body: jsonData);
 
       if (response.statusCode == 200) {
         print('Relation inserted successfully: ${response.body}');
       } else {
-        print('Error while ajgnsjgndgjdsngsdjnsdkjfnk inserting relation: ${response.statusCode}');
+        print(
+            'Error while ajgnsjgndgjdsngsdjnsdkjfnk inserting relation: ${response.statusCode}');
       }
     } catch (error) {
       print('Error while Hello i am namta inserting relation: $error');

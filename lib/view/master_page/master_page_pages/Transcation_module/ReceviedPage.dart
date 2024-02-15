@@ -78,24 +78,51 @@ class _ReceviedPageState extends State<ReceviedPage> {
           SizedBox(
             height: 70,
           ),
-          Container(
-            height: 100,
-            width: 100,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: AppColors.greenColor,
-                width: 2,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: 100,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: AppColors.greenColor,
+                    width: 2,
+                  ),
+                ),
+                child: Center(
+                  child: Icon(
+                    Icons.add_a_photo,
+                    size: 40,
+                    color: AppColors.greenColor,
+                  ),
+                ),
               ),
-            ),
-            child: Center(
-              child: Icon(
-                Icons.add_a_photo,
-                size: 40,
-                color: AppColors.greenColor,
+              SizedBox(
+                width: 20,
               ),
-            ),
+              Container(
+                height: 100,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: AppColors.greenColor,
+                    width: 2,
+                  ),
+                ),
+                child: Center(
+                  child: Icon(
+                    Icons.add_box_outlined,
+                    size: 40,
+                    color: AppColors.greenColor,
+                  ),
+                ),
+              ),
+            ],
           ),
           SizedBox(
             height: 50,
@@ -111,25 +138,23 @@ class _ReceviedPageState extends State<ReceviedPage> {
             ),
             onPressed: () async {
               if (transcationcontroller.data.text.isNotEmpty) {
-                num amt; 
+                num amt;
 
                 try {
                   String textValue = transcationcontroller.data.text;
 
-                  
                   if (textValue.isNotEmpty) {
                     amt = num.parse(textValue);
-                    
+
                     print("Numeric value: $amt");
                   } else {
                     print("Input is empty");
-                    return; 
+                    return;
                   }
                 } catch (e) {
-                  
                   print(
                       "Invalid input: ${transcationcontroller.data.text} is not a valid number");
-                  return; 
+                  return;
                 }
 
                 // transcationcontroller.transcationlist.add(Transcation(
@@ -149,7 +174,7 @@ class _ReceviedPageState extends State<ReceviedPage> {
                 transcationcontroller.postTranscation(
                   shop_id.toString(),
                   cust_id.toString(),
-                  amt, 
+                  amt,
                   '0',
                 );
 

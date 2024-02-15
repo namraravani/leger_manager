@@ -55,9 +55,10 @@ class SupplierPage extends StatelessWidget {
                         await transactioncontroller.getShopId("9427662325");
                     int cust_id = await transactioncontroller.getCustomerID(
                         suppliercontroller.supplierlist[index].contactInfo);
-                    print(shop_id);
-                    print("Hello this is customer id" + "${cust_id}");
-                    transactioncontroller.getAlltranscation(shop_id, cust_id);
+
+                    
+
+                    // transactioncontroller.getAlltranscation(shop_id, cust_id);
                     Get.to(TransactionPage(
                       customerName:
                           suppliercontroller.supplierlist[index].customerName,

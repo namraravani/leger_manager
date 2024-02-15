@@ -128,9 +128,11 @@ class _SupplierViewPageState extends State<SupplierViewPage> {
 
                         int shop_id =
                             await transcationcontroller.getShopId("9427662325");
-                        
-                        suppliercontroller.postSupplierfromContact(shop_id,
-                            contact.displayName ?? "No name", phoneNumber);
+
+                        await suppliercontroller.postSupplierfromContact(
+                            shop_id,
+                            contact.displayName ?? "No name",
+                            phoneNumber);
 
                         int cust_id = await transcationcontroller
                             .getCustomerID(phoneNumber);
@@ -138,9 +140,13 @@ class _SupplierViewPageState extends State<SupplierViewPage> {
                         transcationcontroller.maintainRelation(
                             shop_id, cust_id);
 
+                        
+
                         Get.off(TransactionPage(
                             customerName: contact.displayName ?? "No name",
                             contactinfo: phoneNumber));
+
+                        suppliercontroller.getSuppliers(shop_id);
                       }
                     },
                     title: Text(contact.displayName ?? ""),

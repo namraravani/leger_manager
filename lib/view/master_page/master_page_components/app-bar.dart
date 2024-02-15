@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:leger_manager/Components/app_colors.dart';
 import 'package:leger_manager/Components/icon_logo.dart';
-import 'package:leger_manager/view/inventory_page.dart';
+
 import 'package:leger_manager/view/master_page/master_page_components/bottom_modal.dart';
+import 'package:leger_manager/view/master_page/master_page_pages/Inventory_Module/inventory_page.dart';
 import 'package:leger_manager/view/profile_page.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {

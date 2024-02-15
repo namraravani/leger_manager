@@ -46,8 +46,6 @@ class SupplierController extends GetxController {
     }
   }
 
-  
-
   void postSupplier(int shopId) async {
     try {
       if (supplier_name.text.isEmpty || supplier_contact_info.text.isEmpty) {
@@ -80,10 +78,10 @@ class SupplierController extends GetxController {
     }
   }
 
-  void postSupplierfromContact(int shopId,String name, String Phonenumber) async {
+  Future<void> postSupplierfromContact(
+      int shopId, String name, String Phonenumber) async {
     try {
       if (name.isEmpty || Phonenumber.isEmpty) {
-        
         return;
       }
 
@@ -136,7 +134,6 @@ class SupplierController extends GetxController {
               supplierlist[i].customerName + ' ' + supplierlist[i].contactInfo);
         }
       } else {
-        // Handle error response
         print('Error fetching customers: ${response.statusCode}');
       }
     } catch (error) {
