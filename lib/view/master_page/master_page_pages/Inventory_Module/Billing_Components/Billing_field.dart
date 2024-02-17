@@ -17,7 +17,7 @@ class BillingField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 190,
+      width: 205,
       child: Container(
         height: 70,
         decoration: BoxDecoration(

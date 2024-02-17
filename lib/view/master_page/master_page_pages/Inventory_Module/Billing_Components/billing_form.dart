@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:leger_manager/Controller/billing_controller.dart';
 import 'billing_field.dart';
 
@@ -21,7 +22,7 @@ class _BillingFormState extends State<BillingForm> {
     return Container(
       child: Column(
         children: [
-          Row(
+          Column(
             children: [
               Obx(
                 () => BillingField(
@@ -54,7 +55,7 @@ class _BillingFormState extends State<BillingForm> {
           SizedBox(
             height: 20,
           ),
-          Row(
+          Column(
             children: [
               Obx(
                 () => BillingField(
@@ -69,19 +70,32 @@ class _BillingFormState extends State<BillingForm> {
                   },
                 ),
               ),
-              Obx(
-                () => BillingField(
-                  icon: Icons.currency_rupee_sharp,
-                  hintText: "Enter The Price",
-                  dropdownItems: billingcontroller.productList.value,
-                  onDataChanged: (data) {
-                    setState(() {
-                      dataList[3] = data;
-                      widget.onDataListChanged(dataList);
-                    });
-                  },
+              Container(
+                height: 70,
+                width: 200,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: Colors.blue,
+                    width: 2,
+                  ),
                 ),
-              ),
+                child: Row(
+                  children: [
+                    Icon(Icons.currency_rupee_sharp),
+                    Expanded(
+                      child: TextField(
+                        controller: billingcontroller.amt,
+                        
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                            border: InputBorder.none, hintText: "Enter Amount"),
+                      ),
+                    ),
+                  ],
+                ),
+              )
             ],
           ),
         ],

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
+import 'package:leger_manager/Components/app_colors.dart';
+import 'package:leger_manager/Components/elevated_button.dart';
 import 'package:leger_manager/Components/icon_logo.dart';
 import 'package:leger_manager/Controller/billing_controller.dart';
 import 'package:leger_manager/view/master_page/master_page_pages/Inventory_Module/Billing_Components/Billing_field.dart';
@@ -25,42 +27,46 @@ class _InventoryPageState extends State<InventoryPage> {
       singleData.abc = newDataList[0];
       singleData.category = newDataList[1];
       singleData.product = newDataList[2];
-      singleData.price = newDataList[3];
+      singleData.price = int.tryParse(newDataList[3] ?? " ");
     });
 
     if (singleData.abc != null) {
-      // Send data to BillingController
+      
       billingController.getCategory(singleData.abc!);
     }
   }
 
   void addItemToList() {
-    // Check if all values are non-null before adding to the list
     if (singleData.abc != null &&
         singleData.category != null &&
         singleData.product != null &&
-        singleData.price != null) {
-      // Create a new InventoryData object and add it to the list
-      InventoryData newItem = InventoryData(
-        abc: singleData.abc,
-        category: singleData.category,
-        product: singleData.product,
-        price: singleData.price,
-      );
+        billingController.amt.text.isNotEmpty) {
+      // Convert the String to int
+      int? amount = int.tryParse(billingController.amt.text);
 
-      // Clear the previous values
-      singleData.abc = null;
-      singleData.category = null;
-      singleData.product = null;
-      singleData.price = null;
+      if (amount != null) {
+        // Create a new InventoryData object and add it to the list
+        InventoryData newItem = InventoryData(
+          abc: singleData.abc,
+          category: singleData.category,
+          product: singleData.product,
+          price: amount,
+        );
 
-      // Add the new item to the list
-      dataList.add(newItem);
+        // Clear the previous values
+        singleData.abc = null;
+        singleData.category = null;
+        singleData.product = null;
+        singleData.price = null;
 
-      // Update the UI
-      setState(() {});
+        // Add the new item to the list
+        dataList.add(newItem);
+
+        setState(() {});
+      } else {
+        print("Invalid amount format. Please enter a valid number.");
+      }
     } else {
-      // Show an error message or handle the case where some values are null
       print("Please fill all fields before adding to the list.");
     }
   }
@@ -73,39 +79,98 @@ class _InventoryPageState extends State<InventoryPage> {
       ),
       body: Column(
         children: [
-          Container(
-            height: 100,
-            child: Expanded(
-              child: ListView.builder(
-                itemCount: dataList.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text("Item ${index + 1}"),
-                    subtitle: Container(
-                      width: 200,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("ABC: ${dataList[index].abc}"),
-                          Text("Category: ${dataList[index].category}"),
-                          Text("Product: ${dataList[index].product}"),
-                          Text("Price: ${dataList[index].price}"),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
           BillingForm(onDataListChanged: handleDataListChange),
           SizedBox(height: 20),
           Text(
-              "Data from BillingForm: ${singleData.abc}, ${singleData.category}, ${singleData.product}, ${singleData.price}"),
+            (singleData.abc == null)
+                ? "Added Items will be Displayed here"
+                : " ${singleData.abc}, ${singleData.category}, ${singleData.product}, ${singleData.price}",
+            style: TextStyle(fontSize: 20, color: AppColors.secondaryColor),
+          ),
           SizedBox(height: 20),
-          ElevatedButton(
+          CustomButton(
             onPressed: addItemToList,
-            child: Text("Add Item to List"),
+            buttonText: "Add Item to List",
+          ),
+          Expanded(
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Container(
+                    height: 350,
+                    child: InkWell(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Container(
+                              height: dataList.length * 200,
+                              child: Column(
+                                children: [
+                                  Text(
+                                    "List of Items",
+                                    style: TextStyle(
+                                        fontSize: 30,
+                                        color: AppColors.secondaryColor),
+                                  ),
+                                  Expanded(
+                                    child: ListView.builder(
+                                      itemCount: dataList.length,
+                                      itemBuilder: (context, index) {
+                                        return ListTile(
+                                          title: Text("Item ${index + 1}"),
+                                          subtitle: Container(
+                                            width: 200,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                    "ABC: ${dataList[index].abc}"),
+                                                Text(
+                                                    "Category: ${dataList[index].category}"),
+                                                Text(
+                                                    "Product: ${dataList[index].product}"),
+                                                Text(
+                                                    "Price: ${dataList[index].price}"),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      child: ListView.builder(
+                        itemCount: dataList.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text("Item ${index + 1}"),
+                            subtitle: Container(
+                              width: 200,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("ABC: ${dataList[index].abc}"),
+                                  Text("Category: ${dataList[index].category}"),
+                                  Text("Product: ${dataList[index].product}"),
+                                  Text("Price: ${dataList[index].price}"),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -6,6 +7,8 @@ class BillingController extends GetxController {
   RxList<String> companyList = <String>[].obs;
   RxList<String> categoryList = <String>[].obs;
   RxList<String> productList = <String>[].obs;
+  TextEditingController amt = TextEditingController();
+  int? amount;
 
   @override
   void onInit() {
@@ -63,8 +66,8 @@ class BillingController extends GetxController {
         List<dynamic> jsonResponse = json.decode(response.body);
 
         if (jsonResponse.isNotEmpty && jsonResponse[0].containsKey('company')) {
-          List<String> updatedCompanyList = List<String>.from(
-              jsonResponse.map((item) => item['company']));
+          List<String> updatedCompanyList =
+              List<String>.from(jsonResponse.map((item) => item['company']));
 
           // Clear the existing companyList and add the updated companies
           companyList.clear();
