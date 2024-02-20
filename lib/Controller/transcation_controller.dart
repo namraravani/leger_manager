@@ -109,18 +109,15 @@ class TranscationController extends GetxController {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        print(responseData['customerId'] is String);
-        print(responseData['customerId'] is int);
+
         int customer_id = responseData['customerId'];
-        
+
         return customer_id;
-        
       } else {
         throw Exception(
             'Failed to get customer id. Status Code: ${response.statusCode}');
       }
     } catch (error) {
-      
       throw Exception('Error: $error');
     }
   }

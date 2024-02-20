@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:leger_manager/Classes/customer.dart';
+import 'package:leger_manager/Components/app_colors.dart';
+import 'package:leger_manager/Components/general_txtfld.dart';
 import 'package:leger_manager/Components/icon_logo.dart';
+import 'package:leger_manager/Components/submit_button.dart';
 import 'package:leger_manager/Controller/customer_controller.dart';
 import 'package:leger_manager/Controller/transcation_controller.dart';
 import 'package:leger_manager/view/master_page/master_page_pages/Customer_Module/customer_page.dart';
@@ -21,7 +24,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Customer List'),
+        title: Text('Add Customer'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -30,31 +33,54 @@ class _CustomerListPageState extends State<CustomerListPage> {
           children: [
             TextField(
               controller: customercontroller.customername,
-              decoration: InputDecoration(labelText: 'Name'),
+              decoration: InputDecoration(
+                  hintText: "jay",
+                  labelText: "Enter Your Name",
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: InputBorder.none,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.secondaryColor),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.secondaryColor),
+                  )),
             ),
             SizedBox(height: 16.0),
             TextField(
               controller: customercontroller.customerinfo,
-              decoration: InputDecoration(labelText: 'Phone Number'),
-              keyboardType: TextInputType.phone,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                  hintText: "9427662325",
+                  labelText: "Enter Your Phone Number",
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: InputBorder.none,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.secondaryColor),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.secondaryColor),
+                  )),
             ),
             SizedBox(height: 16.0),
             Row(
               children: [
-                ElevatedButton(
+                SubmitButton(
                   onPressed: () async {
-                    Get.back();
-                    // customercontroller.addCustomer();
-                    customercontroller.postCustomer();
-                    transcationcontroller.maintainRelation(
-                        await transcationcontroller.getShopId("9427662325"),
-                        await transcationcontroller.getCustomerID(
-                            customercontroller.customerinfo.text));
+                    await customercontroller.postCustomer();
+                    int shop_id =
+                        await transcationcontroller.getShopId("9427662325");
+
+                    int cust_id = await transcationcontroller
+                        .getCustomerID(customercontroller.customerinfo.text);
+                    transcationcontroller.maintainRelation(shop_id, cust_id);
 
                     customercontroller.customername.clear();
                     customercontroller.customerinfo.clear();
+                    Get.back();
                   },
-                  child: Text('Add Customer'),
+                  buttonText: 'Add Customer',
                 ),
                 TextButton(
                   onPressed: () {
@@ -62,9 +88,24 @@ class _CustomerListPageState extends State<CustomerListPage> {
                     Get.off(ContactViewPage());
                     // Get.off(CustomerPage());
                   },
-                  child: IconLogo(
-                      icon: Icon(Icons.contact_phone),
-                      name: Text("Add From Contacts")),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: AppColors
+                              .secondaryColor, // Specify the border color
+                          width: 2.0, // Specify the border width
+                        ),
+                        borderRadius: BorderRadius.circular(20)),
+                    child: IconLogo(
+                        icon: Icon(
+                          Icons.contact_phone,
+                          color: AppColors.secondaryColor,
+                        ),
+                        name: Text(
+                          "Add From Contacts",
+                          style: TextStyle(color: AppColors.secondaryColor),
+                        )),
+                  ),
                 ),
               ],
             ),

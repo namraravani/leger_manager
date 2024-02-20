@@ -16,9 +16,10 @@ class CustomerController extends GetxController {
     super.onInit();
   }
 
-  void postCustomer() async {
+  Future<void> postCustomer() async {
     try {
       if (customername.text.isEmpty || customerinfo.text.isEmpty) {
+        print("Hello I AM HERE Thats why it's not working");
         return;
       }
 
@@ -38,7 +39,8 @@ class CustomerController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        getCustomer();
+        print("Customer Added Namra Ravani dont woory");
+        await getCustomer();
         print('Customer added successfully');
       } else {
         print('Error adding customer: ${response.statusCode}');
@@ -86,7 +88,7 @@ class CustomerController extends GetxController {
     }
   }
 
-  void getCustomer() async {
+  Future<void> getCustomer() async {
     try {
       final response = await http.get(
         Uri.parse(

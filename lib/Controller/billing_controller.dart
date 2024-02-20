@@ -143,7 +143,7 @@ class BillingController extends GetxController {
 
       if (response.statusCode == 200) {
         List<dynamic> jsonResponse = json.decode(response.body);
-
+        
         if (jsonResponse.isNotEmpty && jsonResponse[3].containsKey('product')) {
           // Assuming the API response is a list of subcategories
           List<String> products =

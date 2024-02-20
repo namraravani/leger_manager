@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:leger_manager/Components/app_colors.dart';
+import 'package:leger_manager/Components/general_txtfld.dart';
 import 'package:leger_manager/Components/icon_logo.dart';
+import 'package:leger_manager/Components/submit_button.dart';
 import 'package:leger_manager/Controller/supplier_controller.dart';
 import 'package:leger_manager/Controller/transcation_controller.dart';
 import 'package:leger_manager/view/master_page/master_page.dart';
@@ -17,7 +19,7 @@ class SupplierAddPage extends StatelessWidget {
     SupplierController suppliercontroller = Get.put(SupplierController());
     return Scaffold(
       appBar: AppBar(
-        title: Text('SupplierAdd'),
+        title: Text('Add Supplier'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -26,18 +28,40 @@ class SupplierAddPage extends StatelessWidget {
           children: [
             TextField(
               controller: suppliercontroller.supplier_name,
-              decoration: InputDecoration(labelText: 'Name'),
+              decoration: InputDecoration(
+                  hintText: "Namra",
+                  labelText: "Enter Your Name",
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: InputBorder.none,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.secondaryColor),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.secondaryColor),
+                  )),
             ),
             SizedBox(height: 16.0),
             TextField(
               controller: suppliercontroller.supplier_contact_info,
-              decoration: InputDecoration(labelText: 'Phone Number'),
-              keyboardType: TextInputType.phone,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                  hintText: "9427662325",
+                  labelText: "Enter Your Phone Number",
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: InputBorder.none,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.secondaryColor),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.secondaryColor),
+                  )),
             ),
             SizedBox(height: 16.0),
             Row(
               children: [
-                ElevatedButton(
+                SubmitButton(
                   onPressed: () async {
                     Get.back();
                     int shop_id =
@@ -50,8 +74,11 @@ class SupplierAddPage extends StatelessWidget {
                             suppliercontroller.supplier_contact_info.text));
 
                     await suppliercontroller.getSuppliers(shop_id);
+
+                    suppliercontroller.supplier_name.clear();
+                    suppliercontroller.supplier_contact_info.clear();
                   },
-                  child: Text('Add Supplier'),
+                  buttonText: 'Add Supplier',
                 ),
                 TextButton(
                   onPressed: () {
@@ -59,9 +86,24 @@ class SupplierAddPage extends StatelessWidget {
                     // Get.off(ContactViewPage());
                     Get.off(SupplierViewPage());
                   },
-                  child: IconLogo(
-                      icon: Icon(Icons.contact_phone),
-                      name: Text("Add From Contacts")),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: AppColors
+                              .secondaryColor, // Specify the border color
+                          width: 2.0, // Specify the border width
+                        ),
+                        borderRadius: BorderRadius.circular(20)),
+                    child: IconLogo(
+                        icon: Icon(
+                          Icons.contact_phone,
+                          color: AppColors.secondaryColor,
+                        ),
+                        name: Text(
+                          "Add From Contacts",
+                          style: TextStyle(color: AppColors.secondaryColor),
+                        )),
+                  ),
                 ),
               ],
             ),

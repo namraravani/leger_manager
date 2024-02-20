@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 import 'package:leger_manager/Components/app_colors.dart';
 import 'package:leger_manager/Components/elevated_button.dart';
 import 'package:leger_manager/Components/icon_logo.dart';
@@ -16,14 +17,12 @@ class InventoryPage extends StatefulWidget {
 }
 
 class _InventoryPageState extends State<InventoryPage> {
-  // Use a single instance of InventoryData
   InventoryData singleData = InventoryData();
   BillingController billingController = Get.put(BillingController());
   List<InventoryData> dataList = [];
 
   void handleDataListChange(List<String?> newDataList) {
     setState(() {
-      // Update the singleData using the InventoryData class
       singleData.abc = newDataList[0];
       singleData.category = newDataList[1];
       singleData.product = newDataList[2];
@@ -31,7 +30,6 @@ class _InventoryPageState extends State<InventoryPage> {
     });
 
     if (singleData.abc != null) {
-      
       billingController.getCategory(singleData.abc!);
     }
   }
@@ -71,6 +69,12 @@ class _InventoryPageState extends State<InventoryPage> {
     }
   }
 
+  void deleteItemAtIndex(int index) {
+    setState(() {
+      dataList.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,80 +101,226 @@ class _InventoryPageState extends State<InventoryPage> {
               slivers: [
                 SliverToBoxAdapter(
                   child: Container(
-                    height: 350,
-                    child: InkWell(
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return Container(
-                              height: dataList.length * 200,
-                              child: Column(
-                                children: [
-                                  Text(
-                                    "List of Items",
-                                    style: TextStyle(
-                                        fontSize: 30,
-                                        color: AppColors.secondaryColor),
-                                  ),
-                                  Expanded(
-                                    child: ListView.builder(
-                                      itemCount: dataList.length,
-                                      itemBuilder: (context, index) {
-                                        return ListTile(
-                                          title: Text("Item ${index + 1}"),
-                                          subtitle: Container(
-                                            width: 200,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                    "ABC: ${dataList[index].abc}"),
-                                                Text(
-                                                    "Category: ${dataList[index].category}"),
-                                                Text(
-                                                    "Product: ${dataList[index].product}"),
-                                                Text(
-                                                    "Price: ${dataList[index].price}"),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ],
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    height: 300,
+                    child: ListView.builder(
+                      itemCount: dataList.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Center(child: Text("Item ${index + 1}")),
+                          subtitle: Container(
+                            width: 200,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.secondaryColor,
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                            );
-                          },
-                        );
-                      },
-                      child: ListView.builder(
-                        itemCount: dataList.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text("Item ${index + 1}"),
-                            subtitle: Container(
-                              width: 200,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("ABC: ${dataList[index].abc}"),
-                                  Text("Category: ${dataList[index].category}"),
-                                  Text("Product: ${dataList[index].product}"),
-                                  Text("Price: ${dataList[index].price}"),
-                                ],
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text("Company: ${dataList[index].abc}"),
+                                        Text(
+                                            "Category: ${dataList[index].category}"),
+                                        Text(
+                                            "Product: ${dataList[index].product}"),
+                                        Text("Price: ${dataList[index].price}"),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.2,
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        deleteItemAtIndex(index);
+                                      },
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: AppColors.redColor,
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
               ],
             ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (BuildContext context) {
+                  return Container(
+                    height: 2000,
+                    child: Center(
+                      child: Container(
+                        height: 400,
+                        width: 300,
+                        color: Colors.white,
+                        child: Column(
+                          children: [
+                            Text(
+                              "Namra",
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            Text(
+                              "Invoice",
+                              style: TextStyle(fontSize: 15),
+                            ),
+                            Text(
+                              "Generated by Ledger Manager",
+                              style: TextStyle(fontSize: 15),
+                            ),
+                            Text(
+                              "Date : " +
+                                  DateFormat('d/M/yyyy').format(DateTime.now()),
+                              style: TextStyle(fontSize: 15),
+                            ),
+                            Divider(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  "Item",
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                                Text(
+                                  "Company",
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                                Text(
+                                  "Category",
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                                Text(
+                                  "Product",
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                                Text(
+                                  "Quantity",
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                                Text(
+                                  "Price",
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                              ],
+                            ),
+                            Divider(),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.whiteColor,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              height: 220,
+                              child: ListView.builder(
+                                itemCount: dataList.length,
+                                itemBuilder: (context, index) {
+                                  return ListTile(
+                                    title: Expanded(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "${index + 1}",
+                                                style: TextStyle(fontSize: 10),
+                                              ),
+                                            ],
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "${dataList[index].abc}",
+                                                style: TextStyle(fontSize: 10),
+                                              ),
+                                            ],
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "${dataList[index].category}",
+                                                style: TextStyle(fontSize: 10),
+                                              ),
+                                            ],
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "${dataList[index].product}",
+                                                style: TextStyle(fontSize: 10),
+                                              ),
+                                            ],
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "1",
+                                                style: TextStyle(fontSize: 10),
+                                              ),
+                                            ],
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                "${dataList[index].price}",
+                                                style: TextStyle(fontSize: 10),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            Divider(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Total"),
+                                Text("293"),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+            child: Text("Preview"),
           ),
         ],
       ),
