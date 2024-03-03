@@ -6,12 +6,14 @@ class BillingField extends StatelessWidget {
   final String hintText;
   final List<String> dropdownItems;
   final ValueChanged<String?> onDataChanged;
+  final int? index;
 
   BillingField({
     required this.icon,
     required this.hintText,
     required this.dropdownItems,
     required this.onDataChanged,
+    this.index,
   });
 
   @override
@@ -39,7 +41,9 @@ class BillingField extends StatelessWidget {
                   hintText: hintText,
                   border: InputBorder.none,
                 ),
-                items: dropdownItems.map((String item) {
+                items: dropdownItems.asMap().entries.map((entry) {
+                  int entryIndex = entry.key;
+                  String item = entry.value;
                   return DropdownMenuItem<String>(
                     value: item,
                     child: Text(item),

@@ -1,20 +1,39 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+
+import '../view/master_page/master_page_pages/Inventory_Module/Billing_Components/inventory_data.dart';
 
 class BillingController extends GetxController {
   RxList<String> companyList = <String>[].obs;
   RxList<String> categoryList = <String>[].obs;
   RxList<String> productList = <String>[].obs;
-  TextEditingController amt = TextEditingController();
+  RxList<String> productpriceList = <String>[].obs;
+  List<int> priceindexList = [];
+  RxInt selectedProductIndex = RxInt(-1);
+  TextEditingController quan = TextEditingController();
   int? amount;
+  int? parsedPrice;
 
   @override
   void onInit() {
     getCompany();
     getProduct("Wafers");
     super.onInit();
+  }
+
+  void updateSelectedProductIndex(int index) {
+    selectedProductIndex.value = index;
+
+    // Fetch the price from the product price list
+    if (index >= 0 && index < productpriceList.length) {
+      // Use int.tryParse to handle cases where the string is not a valid integer
+      parsedPrice = int.tryParse(productpriceList[index]) ?? 0;
+    } else {
+      parsedPrice = 0;
+    }
   }
 
   Future<void> getCompany() async {
@@ -142,29 +161,122 @@ class BillingController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        List<dynamic> jsonResponse = json.decode(response.body);
-        
-        if (jsonResponse.isNotEmpty && jsonResponse[3].containsKey('product')) {
-          // Assuming the API response is a list of subcategories
-          List<String> products =
-              List<String>.from(jsonResponse.map((item) => item['product']));
+        List<Map<String, dynamic>> jsonResponse =
+            List<Map<String, dynamic>>.from(json.decode(response.body));
 
-          // Clear the existing categoryList and add the new subcategories
+        if (jsonResponse.isNotEmpty && jsonResponse[3].containsKey('product')) {
+          // Extract product names and prices into separate lists
+          List<String> productNames =
+              jsonResponse.map((item) => item['product'] as String).toList();
+
+          List<String> productPrices =
+              jsonResponse.map((item) => item['price'] as String).toList();
+
+          // Clear the existing lists and add the new data
           productList.clear();
-          productList.addAll(products);
+          productList.addAll(productNames);
+          productpriceList.clear();
+          productpriceList.addAll(productPrices);
 
           // Update the UI
           update();
 
-          // Print the category list
-          productList.forEach((product) {
-            print(product);
+          // Print the entire response for debugging
+          print('API Response: $jsonResponse');
+
+          // Print the product lists
+          productList.forEach((productName) {
+            print('Product Name: $productName');
+          });
+
+          productpriceList.forEach((productPrice) {
+            print('Product Price: $productPrice');
           });
         } else {
           print('Error: Invalid JSON structure');
         }
       } else {
         print('Error fetching subcategories: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
+
+  // int calculatePrice(int index, InventoryData data) {
+  //   try {
+  //     // Check if index is within bounds
+  //     if (index >= 0 && index < productpriceList.length) {
+  //       // Fetch the price at the specified index and convert it to an integer
+  //       int productPrice = int.tryParse(productpriceList[index]) ?? 0;
+
+  //       // Multiply the product price by the quantity (data.price)
+  //       int calculatedPrice = productPrice * (data.price ?? 0);
+
+  //       // Print the calculated price for debugging
+  //       print('Calculated Price: $calculatedPrice');
+
+  //       return calculatedPrice;
+  //     } else {
+  //       print('Error: Index out of bounds');
+  //     }
+  //   } catch (error) {
+  //     print('Error calculating price: $error');
+  //   }
+
+  //   // Return 0 in case of errors or invalid index
+  //   return 0;
+  // }
+
+  Future<void> postInventoryData(
+      int shopId, int customerId, List<InventoryData> inventoryList) async {
+    try {
+      print(shopId);
+      print(customerId);
+      for (int i = 0; i < inventoryList.length; i++) {
+        print(inventoryList[i].abc);
+        print(inventoryList[i].category);
+      }
+      if (inventoryList.isEmpty) {
+        print("Inventory list is empty");
+        return;
+      }
+
+      print("I am In the Try Block");
+
+      List<Map<String, dynamic>> itemsList = inventoryList
+          .map((data) => {
+                'company': data.abc,
+                'category': data.category,
+                'product': data.product,
+                'quantity': data.quantity,
+                'price': data.total_price,
+              })
+          .toList();
+
+      final response = await http.post(
+        Uri.parse(
+            'https://1kv5glweui.execute-api.ap-south-1.amazonaws.com/development/billitems'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'shop_id': shopId,
+          'customerid': customerId,
+          'items': itemsList,
+        }),
+      );
+
+      print("I Near To Get Executed");
+      print('Response Body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        // Successfully posted the inventory data
+        print('Inventory data posted successfully');
+      } else {
+        print('Error posting inventory data: ${response.statusCode}');
+        // Print additional details if available
+        if (response.body.isNotEmpty) {
+          print('Error Details: ${response.body}');
+        }
       }
     } catch (error) {
       print('Error: $error');

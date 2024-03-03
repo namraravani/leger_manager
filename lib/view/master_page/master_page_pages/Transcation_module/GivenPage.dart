@@ -4,6 +4,7 @@ import 'package:leger_manager/Classes/Transcation.dart';
 import 'package:leger_manager/Components/CircleAvatar.dart';
 import 'package:leger_manager/Components/app_colors.dart';
 import 'package:leger_manager/Controller/transcation_controller.dart';
+import 'package:leger_manager/view/master_page/master_page_pages/Inventory_Module/inventory_page.dart';
 import 'package:leger_manager/view/master_page/master_page_pages/Transcation_module/transaction_page.dart';
 
 class GivenPage extends StatelessWidget {
@@ -69,24 +70,56 @@ class GivenPage extends StatelessWidget {
           SizedBox(
             height: 70,
           ),
-          Container(
-            height: 100,
-            width: 100,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: AppColors.redColor,
-                width: 2,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: 100,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: AppColors.redColor,
+                    width: 2,
+                  ),
+                ),
+                child: Center(
+                  child: Icon(
+                    Icons.add_a_photo,
+                    size: 40,
+                    color: AppColors.redColor,
+                  ),
+                ),
               ),
-            ),
-            child: Center(
-              child: Icon(
-                Icons.add_a_photo,
-                size: 40,
-                color: AppColors.redColor,
+              SizedBox(
+                width: 20,
               ),
-            ),
+              Container(
+                height: 100,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: AppColors.redColor,
+                    width: 2,
+                  ),
+                ),
+                child: Center(
+                  child: IconButton(
+                    onPressed: () {
+                      Get.to(InventoryPage());
+                    },
+                    icon: Icon(
+                      Icons.receipt_long,
+                      color: AppColors.redColor,
+                      size: 40,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
           SizedBox(
             height: 50,
