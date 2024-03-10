@@ -131,15 +131,21 @@ class _ContactViewPageState extends State<ContactViewPage> {
 
                         int shop_id =
                             await transcationcontroller.getShopId("9427662325");
-                        
+
                         int cust_id = await transcationcontroller
                             .getCustomerID(phoneNumber);
+
                         transcationcontroller.maintainRelation(
                             shop_id, cust_id);
+
+                        // transcationcontroller.postTranscation(
+                        //     shop_id.toString(), cust_id.toString(), 0, "0");
 
                         Get.off(TransactionPage(
                             customerName: contact.displayName ?? "No name",
                             contactinfo: phoneNumber));
+
+                        
                       }
                     },
                     title: Text(contact.displayName ?? ""),

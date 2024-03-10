@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:leger_manager/Classes/Transcation.dart';
 import 'package:http/http.dart' as http;
+import 'package:leger_manager/Controller/customer_controller.dart';
 
 class TranscationController extends GetxController {
   RxList<Transcation> transcationlist = <Transcation>[].obs;
@@ -15,6 +16,9 @@ class TranscationController extends GetxController {
   RxString mobileNumber = ''.obs;
   RxString contactinfo = ''.obs;
 
+  final CustomerController customerController = Get.put(CustomerController());
+
+  @override
   void setMobileNumber(String number) {
     mobileNumber.value = number;
   }
@@ -65,7 +69,6 @@ class TranscationController extends GetxController {
 
       return formattedTime;
     } catch (e) {
-      print("Error formatting time: $e");
       return "Invalid Time";
     }
   }
@@ -147,14 +150,11 @@ class TranscationController extends GetxController {
         print(
             'Error while ajgnsjgndgjdsngsdjnsdkjfnk inserting relation: ${response.statusCode}');
       }
-    } catch (error) {
-      print('Error while Hello i am namta inserting relation: $error');
-    }
+    } catch (error) {}
   }
 
   void postTranscation(
       String shopid, String customer_id, num amt, String type) async {
-    print("Post customer method is called");
     try {
       if (shopid.isEmpty || customer_id.isEmpty || type.isEmpty) {
         print("Empty Data");
@@ -168,11 +168,7 @@ class TranscationController extends GetxController {
         'shopid': shopid,
       };
 
-      print("data added in map");
-
       String jsonData = json.encode(customerData);
-
-      print("hello json encoded");
 
       final response = await http.post(
         Uri.parse(
@@ -186,6 +182,7 @@ class TranscationController extends GetxController {
         int intValue2 = int.parse(customer_id);
         getAlltranscation(intValue1, intValue2);
         print("data added in trnascation Sucessfully");
+        customerController.updateData();
       } else {
         print('Error adding customer: ${response.statusCode}');
       }
@@ -220,7 +217,7 @@ class TranscationController extends GetxController {
         transcationlist.assignAll(transcationList);
 
         for (int i = 0; i < transcationList.length; i++) {
-          print(transcationList[i].transcationTime);
+          print(transcationList[i].itemsList);
         }
       } else {
         print(

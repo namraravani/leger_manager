@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:leger_manager/Classes/Transcation.dart';
 import 'package:leger_manager/Components/CircleAvatar.dart';
 import 'package:leger_manager/Components/app_colors.dart';
+import 'package:leger_manager/Components/general_txtfld.dart';
+import 'package:leger_manager/Controller/customer_controller.dart';
 import 'package:leger_manager/Controller/transcation_controller.dart';
 import 'package:leger_manager/view/master_page/master_page_pages/Inventory_Module/inventory_page.dart';
 import 'package:leger_manager/view/master_page/master_page_pages/Transcation_module/transaction_page.dart';
@@ -10,6 +12,8 @@ import 'package:leger_manager/view/master_page/master_page_pages/Transcation_mod
 class GivenPage extends StatelessWidget {
   TranscationController transcationcontroller =
       Get.find<TranscationController>();
+
+  CustomerController customercontroller = Get.find<CustomerController>();
   final String customerName;
   final String customerInfo;
 
@@ -55,17 +59,44 @@ class GivenPage extends StatelessWidget {
               ),
               Container(
                 width: 100,
-                child: TextField(
-                  style: TextStyle(fontSize: 25, color: AppColors.redColor),
-                  keyboardType: TextInputType.number,
-                  controller: transcationcontroller.data,
-                  decoration: InputDecoration(
-                    hintText: "Enter Amount",
-                    hintStyle: TextStyle(fontSize: 15, color: Colors.grey),
-                  ),
+                child: Column(
+                  children: [
+                    TextField(
+                      style: TextStyle(fontSize: 25, color: AppColors.redColor),
+                      keyboardType: TextInputType.number,
+                      controller: transcationcontroller.data,
+                      decoration: InputDecoration(
+                        hintText: "Enter Amount",
+                        hintStyle: TextStyle(fontSize: 15, color: Colors.grey),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Container(
+            height: 50,
+            width: 300,
+            child: TextField(
+              style: TextStyle(fontSize: 25, color: AppColors.redColor),
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                  hintText: "Enter Note Optional",
+                  labelText: "Enter Note",
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: InputBorder.none,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.redColor),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.redColor),
+                  )),
+            ),
           ),
           SizedBox(
             height: 70,
@@ -108,8 +139,13 @@ class GivenPage extends StatelessWidget {
                 ),
                 child: Center(
                   child: IconButton(
-                    onPressed: () {
-                      Get.to(InventoryPage());
+                    onPressed: () async {
+                      Get.to(InventoryPage(
+                        shopId:
+                            await transcationcontroller.getShopId("9427662325"),
+                        custId: await transcationcontroller
+                            .getCustomerID(customerInfo),
+                      ));
                     },
                     icon: Icon(
                       Icons.receipt_long,
@@ -160,6 +196,7 @@ class GivenPage extends StatelessWidget {
                 ));
 
                 transcationcontroller.data.clear();
+                customercontroller.getCustomer();
 
                 String mobileNumber = transcationcontroller.mobileNumber.value;
 

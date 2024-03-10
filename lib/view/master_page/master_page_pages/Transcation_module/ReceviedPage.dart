@@ -168,6 +168,7 @@ class _ReceviedPageState extends State<ReceviedPage> {
                 ));
 
                 transcationcontroller.data.clear();
+                customercontroller.getCustomer();
 
                 String mobileNumber = transcationcontroller.mobileNumber.value;
 
@@ -183,7 +184,7 @@ class _ReceviedPageState extends State<ReceviedPage> {
                   '0',
                 );
 
-                
+                customercontroller.getCustomer();
 
                 // setState(() {});
               }

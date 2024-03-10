@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -16,6 +16,8 @@ class BillingController extends GetxController {
   TextEditingController quan = TextEditingController();
   int? amount;
   int? parsedPrice;
+  
+  
 
   @override
   void onInit() {
@@ -203,6 +205,16 @@ class BillingController extends GetxController {
     }
   }
 
+  double calculateTotalPrice(List<InventoryData> datalist) {
+    double total = 0.0;
+    for (InventoryData data in datalist) {
+      
+      total += data.total_price ?? 0.0;
+    }
+
+    return total;
+  }
+
   // int calculatePrice(int index, InventoryData data) {
   //   try {
   //     // Check if index is within bounds
@@ -228,8 +240,8 @@ class BillingController extends GetxController {
   //   return 0;
   // }
 
-  Future<void> postInventoryData(
-      int shopId, int customerId, List<InventoryData> inventoryList) async {
+  Future<void> postInventoryData(int shopId, int customerId,
+      List<InventoryData> inventoryList,String type) async {
     try {
       print(shopId);
       print(customerId);
@@ -256,11 +268,13 @@ class BillingController extends GetxController {
 
       final response = await http.post(
         Uri.parse(
-            'https://1kv5glweui.execute-api.ap-south-1.amazonaws.com/development/billitems'),
+            'https://1kv5glweui.execute-api.ap-south-1.amazonaws.com/development/createtranscation'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          'shop_id': shopId,
-          'customerid': customerId,
+          "customerid": customerId,
+          "amount": calculateTotalPrice(inventoryList),
+          "type": "1",
+          "shopid": shopId,
           'items': itemsList,
         }),
       );

@@ -6,8 +6,11 @@ import 'package:leger_manager/Components/app_colors.dart';
 import 'package:leger_manager/Components/icon_logo.dart';
 import 'package:leger_manager/Components/text_logo.dart';
 import 'package:leger_manager/Controller/transcation_controller.dart';
+import 'package:leger_manager/view/master_page/master_page_pages/Inventory_Module/Billing_Components/invoice.dart';
 import 'package:leger_manager/view/master_page/master_page_pages/Transcation_module/GivenPage.dart';
 import 'package:leger_manager/view/master_page/master_page_pages/Transcation_module/ReceviedPage.dart';
+import 'package:leger_manager/view/master_page/master_page_pages/Transcation_module/small_invoice.dart';
+
 import 'package:lottie/lottie.dart';
 
 class TransactionPage extends StatelessWidget {
@@ -24,6 +27,7 @@ class TransactionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool yesterdaythere = false;
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -56,74 +60,110 @@ class TransactionPage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final transaction =
                       transcationcontroller.transcationlist[index];
-                  final formattedTransactionDate =
-                      transcationcontroller.DisplayDay(
-                          transaction.transcationTime);
-
-                  final isToday = DateTime.now()
-                      .toLocal()
-                      .isSameDay(formattedTransactionDate);
-
-                  final isYesterday = DateTime.now()
-                      .subtract(Duration(days: 1))
-                      .toLocal()
-                      .isSameDay(formattedTransactionDate);
 
                   return Column(
                     children: [
-                      isYesterday
-                          ? Container(
-                              padding: EdgeInsets.all(8.0),
-                              color: Colors.grey[300],
-                              child: Center(
-                                child: Text(
-                                  'Yesterday',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            )
-                          : SizedBox.shrink(),
-                      if (isToday && index == 0)
-                        Container(
-                          padding: EdgeInsets.all(8.0),
-                          color: Colors.grey[300],
-                          child: Container(
-                            width: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            child: Text(
-                              'Today',
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.secondaryColor),
-                            ),
-                          ),
-                        ),
-                      Container(
-                        height: 100,
-                        child: ListTile(
-                          title: Row(
-                            mainAxisAlignment: transaction.variable == '1'
-                                ? MainAxisAlignment.end
-                                : MainAxisAlignment.start,
-                            children: [
+                      ListTile(
+                        title: Row(
+                          mainAxisAlignment: transaction.variable == '1'
+                              ? MainAxisAlignment.end
+                              : MainAxisAlignment.start,
+                          children: [
+                            if (transaction.variable == '1')
+                              if (transaction.itemsList?.isNotEmpty ?? true)
+                                InkWell(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return Invoice(
+                                            dataList: transaction.itemsList!);
+                                      },
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 260,
+                                    width: 250,
+                                    padding: EdgeInsets.all(8.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Icon(Icons.arrow_upward),
+                                            Icon(
+                                              Icons.currency_rupee_sharp,
+                                              color: Colors.white,
+                                            ),
+                                            Text(
+                                              transaction.data,
+                                              style: TextStyle(
+                                                  fontSize: 25,
+                                                  color: Colors.white),
+                                            ),
+                                            SizedBox(width: 20),
+                                            Text(
+                                              transcationcontroller.formatTime(
+                                                  transaction.transcationTime),
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.white),
+                                            ),
+                                          ],
+                                        ),
+                                        // CardGrid(m: 0, n: 1),
+                                        Container(
+                                          height: 200,
+                                          child: SmallInvoice(
+                                            dataList: transaction.itemsList!,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              else
+                                Container(
+                                  padding: EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.arrow_upward),
+                                      Icon(
+                                        Icons.currency_rupee_sharp,
+                                        color: Colors.white,
+                                      ),
+                                      Text(
+                                        transaction.data,
+                                        style: TextStyle(
+                                            fontSize: 25, color: Colors.white),
+                                      ),
+                                      SizedBox(width: 20),
+                                      Text(
+                                        transcationcontroller.formatTime(
+                                            transaction.transcationTime),
+                                        style: TextStyle(
+                                            fontSize: 16, color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                            else
                               Container(
                                 padding: EdgeInsets.all(8.0),
                                 decoration: BoxDecoration(
-                                  color: transaction.variable == '1'
-                                      ? Colors.red
-                                      : Colors.green,
+                                  color: Colors.green,
                                   borderRadius: BorderRadius.circular(8.0),
                                 ),
                                 child: Row(
                                   children: [
-                                    transaction.variable == '1'
-                                        ? Icon(Icons.arrow_upward)
-                                        : Icon(Icons.arrow_downward),
+                                    Icon(Icons.arrow_downward),
                                     Icon(
                                       Icons.currency_rupee_sharp,
                                       color: Colors.white,
@@ -143,8 +183,7 @@ class TransactionPage extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                            ],
-                          ),
+                          ],
                         ),
                       ),
                     ],

@@ -45,6 +45,8 @@ dependencies:
   contacts_service: ^0.6.3
   intl: ^0.17.0
   shared_preferences: ^2.0.8
+  connectivity_wrapper: ^1.1.4
+  connectivity_plus: ^5.0.2
 
 dev_dependencies:
   flutter_test:

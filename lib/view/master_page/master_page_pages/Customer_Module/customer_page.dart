@@ -14,18 +14,43 @@ import 'package:leger_manager/view/master_page/master_page_pages/Transcation_mod
 import 'package:leger_manager/view/master_page/master_page_pages/Customer_Module/test_contact_view.dart';
 import 'package:lottie/lottie.dart';
 
-class CustomerPage extends StatelessWidget {
+class CustomerPage extends StatefulWidget {
+  @override
+  State<CustomerPage> createState() => _CustomerPageState();
+}
+
+class _CustomerPageState extends State<CustomerPage> {
   final TranscationController transactioncontroller =
       Get.put(TranscationController());
+
   final CustomerController customercontroller = Get.put(CustomerController());
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Update data when dependencies change (e.g., when returning from another page)
+    updateData();
+  }
+
+  Future<void> updateData() async {
+    await customercontroller.getCustomer();
+    await customercontroller
+        .loadLastTransactionDataForCustomers(customercontroller.customerlist);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          // buildEmptyListAnimation()
-          buildCustomerListView(),
+          RefreshIndicator(
+            onRefresh: () async {
+              await customercontroller.getCustomer();
+              await customercontroller.loadLastTransactionDataForCustomers(
+                  customercontroller.customerlist);
+            },
+            child: buildCustomerListView(),
+          ),
           Positioned(
             bottom: 16.0,
             right: 40.0,
@@ -51,59 +76,71 @@ class CustomerPage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 50.0),
       child: Obx(
-        () => ListView.builder(
-          itemCount: customercontroller.customerlist.length,
-          itemBuilder: (context, index) {
-            return Column(
-              children: [
-                ListTile(
-                  onTap: () async {
-                    int shop_id =
-                        await transactioncontroller.getShopId("9427662325");
-                    int cust_id = await transactioncontroller.getCustomerID(
-                        customercontroller.customerlist[index].contactInfo);
-                    print(shop_id);
-                    print("Hello this is customer id" + "${cust_id}");
-                    transactioncontroller.getAlltranscation(shop_id, cust_id);
-                    Get.to(TransactionPage(
-                      customerName:
-                          customercontroller.customerlist[index].customerName,
-                      contactinfo:
-                          customercontroller.customerlist[index].contactInfo,
-                    ));
-                  },
-                  leading: InitialsAvatar(
-                      name:
+        () {
+          if (customercontroller.customerlist.isEmpty) {
+            return Center(child: buildEmptyListAnimation());
+          } else {
+            return ListView.builder(
+              itemCount: customercontroller.customerlist.length,
+              itemBuilder: (context, index) {
+                return Column(
+                  children: [
+                    ListTile(
+                      onTap: () async {
+                        int shop_id =
+                            await transactioncontroller.getShopId("9427662325");
+                        int cust_id = await transactioncontroller.getCustomerID(
+                            customercontroller.customerlist[index].contactInfo);
+                        print(shop_id);
+                        transactioncontroller.getAlltranscation(
+                            shop_id, cust_id);
+                        Get.to(TransactionPage(
+                          customerName: customercontroller
+                              .customerlist[index].customerName,
+                          contactinfo: customercontroller
+                              .customerlist[index].contactInfo,
+                        ));
+                      },
+                      leading: InitialsAvatar(
+                          name: customercontroller
+                              .customerlist[index].customerName),
+                      title: Text(
                           customercontroller.customerlist[index].customerName),
-                  title:
-                      Text(customercontroller.customerlist[index].customerName),
-                  subtitle: Row(
-                    children: [
-                      Icon(
-                        Icons.currency_rupee_sharp,
-                        size: 17,
+                      subtitle: Obx(
+                        () => Row(
+                          children: [
+                            Icon(
+                              Icons.currency_rupee_sharp,
+                              size: 17,
+                            ),
+                            if (customercontroller
+                                    .lastTransactionList.isNotEmpty &&
+                                index <
+                                    customercontroller
+                                        .lastTransactionList.length)
+                              Text(
+                                customercontroller
+                                    .lastTransactionList[index].data,
+                                style: TextStyle(fontWeight: FontWeight.w900),
+                              ),
+                            SizedBox(width: 5),
+                            Text("Payment added on "),
+                          ],
+                        ),
                       ),
-                      Text(
-                        "52",
-                        style: TextStyle(fontWeight: FontWeight.w900),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text("Payment added on 04Feb,2024"),
-                    ],
-                  ),
-                ),
-                Divider(
-                  height: 1,
-                  indent: 16,
-                  endIndent: 16,
-                  color: Colors.grey,
-                ),
-              ],
+                    ),
+                    Divider(
+                      height: 1,
+                      indent: 16,
+                      endIndent: 16,
+                      color: Colors.grey,
+                    ),
+                  ],
+                );
+              },
             );
-          },
-        ),
+          }
+        },
       ),
     );
   }

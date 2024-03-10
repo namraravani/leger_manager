@@ -71,7 +71,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           GestureDetector(
             onTap: () {
-              Get.to(InventoryPage());
+              // Get.to(InventoryPage());
             },
             child: Container(
               decoration: BoxDecoration(
