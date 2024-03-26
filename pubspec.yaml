@@ -47,6 +47,8 @@ dependencies:
   shared_preferences: ^2.0.8
   connectivity_wrapper: ^1.1.4
   connectivity_plus: ^5.0.2
+  calendar_date_picker2: ^0.5.5
+  path_provider: ^2.1.2
 
 dev_dependencies:
   flutter_test:

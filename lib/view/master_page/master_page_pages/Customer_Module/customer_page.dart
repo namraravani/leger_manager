@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
 import 'package:leger_manager/Classes/customer.dart';
 import 'package:leger_manager/Components/CircleAvatar.dart';
@@ -24,19 +25,6 @@ class _CustomerPageState extends State<CustomerPage> {
       Get.put(TranscationController());
 
   final CustomerController customercontroller = Get.put(CustomerController());
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Update data when dependencies change (e.g., when returning from another page)
-    updateData();
-  }
-
-  Future<void> updateData() async {
-    await customercontroller.getCustomer();
-    await customercontroller
-        .loadLastTransactionDataForCustomers(customercontroller.customerlist);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,8 +92,19 @@ class _CustomerPageState extends State<CustomerPage> {
                       leading: InitialsAvatar(
                           name: customercontroller
                               .customerlist[index].customerName),
-                      title: Text(
-                          customercontroller.customerlist[index].customerName),
+                      title: Obx(
+                        () => Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(customercontroller
+                                .customerlist[index].customerName),
+                            Spacer(),
+                            if (customercontroller.totalSumList.isNotEmpty &&
+                                index < customercontroller.totalSumList.length)
+                              Text("${customercontroller.totalSumList[index]}"),
+                          ],
+                        ),
+                      ),
                       subtitle: Obx(
                         () => Row(
                           children: [
@@ -124,7 +123,13 @@ class _CustomerPageState extends State<CustomerPage> {
                                 style: TextStyle(fontWeight: FontWeight.w900),
                               ),
                             SizedBox(width: 5),
-                            Text("Payment added on "),
+                            if (customercontroller
+                                    .lastTransactionList.isNotEmpty &&
+                                index <
+                                    customercontroller
+                                        .lastTransactionList.length)
+                              Text(
+                                  "Payment added on ${customercontroller.formatDateTime(customercontroller.lastTransactionList[index].transcationTime)}"),
                           ],
                         ),
                       ),

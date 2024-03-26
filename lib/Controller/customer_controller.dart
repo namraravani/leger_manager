@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:ffi';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
@@ -6,33 +8,34 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:leger_manager/Classes/Transcation.dart';
 import 'package:leger_manager/Classes/customer.dart';
+import 'package:path_provider/path_provider.dart';
 
 class CustomerController extends GetxController {
   RxList<Customer> customerlist = <Customer>[].obs;
+  RxList<Customer> customerlist1 = <Customer>[].obs;
   TextEditingController customername = TextEditingController();
   TextEditingController customerinfo = TextEditingController();
   RxList<Transcation> lastTransactionList = <Transcation>[].obs;
+  RxList<double> totalSumList = <double>[].obs;
   bool isCustomerListLoaded = false;
+  RxList<Customer> storedcustomerlist = <Customer>[].obs;
   int count = 0;
+  final box = GetStorage();
 
   @override
   void onInit() {
     getCustomer();
-    // loadLastTransactionDataForCustomers();
 
     super.onInit();
   }
 
   void updateData() {
-    // Optionally, you can add any logic needed to update data
-    // In this example, we just reload the last transactions
     loadLastTransactionDataForCustomers(customerlist);
   }
 
   Future<void> postCustomer() async {
     try {
       if (customername.text.isEmpty || customerinfo.text.isEmpty) {
-       
         return;
       }
 
@@ -52,9 +55,7 @@ class CustomerController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        
         await getCustomer();
-        
       } else {
         print('Error adding customer: ${response.statusCode}');
       }
@@ -87,10 +88,7 @@ class CustomerController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        
         getCustomer();
-
-        
       } else {
         print('Error adding customer: ${response.statusCode}');
       }
@@ -116,21 +114,32 @@ class CustomerController extends GetxController {
         customerlist.assignAll(customers);
         update();
 
-        for (int i = 0; i < customerlist.length; i++) {
-          print(
-              customerlist[i].customerName + ' ' + customerlist[i].contactInfo);
-        }
-
         loadLastTransactionDataForCustomers(customerlist);
+
+        writeToLocalStorage(customerlist);
       } else {
-        
         print('Error fetching customers: ${response.statusCode}');
       }
     } catch (error) {
-      
       print('Error: $error');
     }
   }
+
+  void writeToLocalStorage(RxList<Customer> list) async {
+  final appDocumentsDir = await getApplicationDocumentsDirectory();
+
+  final List<Map<String, dynamic>> customerData = list.map((obj) => {
+    'customername': obj.customerName,
+    'contactinfo': obj.contactInfo
+  }).toList();
+
+  // box.write('customerlist', customerData);
+
+  // if (box.hasData('customers')) {
+  //   final storedCustomers = box.read<List>('customers')!;
+  //   customerlist1 = storedCustomers.map((data) => Customer.fromJson(data)).toList().obs;
+  // }
+}
 
   Future<int> getShopId(String yourStringData) async {
     String apiUrl =
@@ -199,33 +208,74 @@ class CustomerController extends GetxController {
     }
   }
 
+  Future<double> calculatesum(int shopid, int customer_id) async {
+    String apiUrl =
+        'https://1kv5glweui.execute-api.ap-south-1.amazonaws.com/development/gettranscationbyid';
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          "custid": customer_id,
+          "shop_id": shopid,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonData = json.decode(response.body);
+
+        List<Transcation> transcationList = jsonData
+            .map((transaction) => Transcation.fromJson(transaction))
+            .toList();
+
+        List<double> summedDataValues = transcationList.map((transaction) {
+          double amount = double.parse(transaction.data);
+          return transaction.variable == '1' ? -amount : amount;
+        }).toList();
+
+        double totalSum =
+            summedDataValues.fold(0, (previous, current) => previous + current);
+
+        return Future.value(totalSum);
+      } else {
+        print(
+            "Failed to get transactions. Status Code: ${response.statusCode}");
+        throw Exception(
+            "Failed to get transactions. Status Code: ${response.statusCode}");
+      }
+    } catch (error) {
+      print("Error: $error");
+      throw Exception("Error: $error");
+    }
+  }
+
   Future<void> loadLastTransactionDataForCustomers(
       List<Customer> customers) async {
     try {
-      count++;
-      print("Hello this is count ${count}");
+      lastTransactionList.clear();
+      // totalSumList.clear();
       List<Transcation> allLastTransactions = [];
 
       for (Customer customer in customers) {
         try {
           int customerID = await getCustomerID(customer.contactInfo);
-
           int shopID = await getShopId("9427662325");
 
           Transcation lastTransaction =
               await getlasttranscation(shopID, customerID);
 
+          // double totalSum = await calculatesum(shopID, customerID);
           allLastTransactions.add(lastTransaction);
+          // totalSumList.add(totalSum);
         } catch (error) {
           print("Hello There is an Error");
         }
       }
 
       lastTransactionList.addAll(allLastTransactions);
-
-      for (int i = 0; i < lastTransactionList.length; i++) {
-        print(lastTransactionList[i]);
-      }
     } catch (error) {
       print('Error loading last transaction data: $error');
     }

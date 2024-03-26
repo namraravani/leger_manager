@@ -176,13 +176,13 @@ class TranscationController extends GetxController {
         headers: {'Content-Type': 'application/json'},
         body: jsonData,
       );
-      print(jsonData);
+
       if (response.statusCode == 200) {
         int intValue1 = int.parse(shopid);
         int intValue2 = int.parse(customer_id);
         getAlltranscation(intValue1, intValue2);
-        print("data added in trnascation Sucessfully");
-        customerController.updateData();
+
+        customerController.getCustomer();
       } else {
         print('Error adding customer: ${response.statusCode}');
       }
@@ -208,6 +208,7 @@ class TranscationController extends GetxController {
       );
 
       if (response.statusCode == 200) {
+        transcationlist.clear();
         final List<dynamic> jsonData = json.decode(response.body);
 
         List<Transcation> transcationList = jsonData
@@ -225,7 +226,6 @@ class TranscationController extends GetxController {
       }
     } catch (error) {
       print("Error: $error");
-      // Handle other exceptions here
     }
   }
 }
