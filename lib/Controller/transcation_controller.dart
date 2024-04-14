@@ -217,9 +217,9 @@ class TranscationController extends GetxController {
 
         transcationlist.assignAll(transcationList);
 
-        for (int i = 0; i < transcationList.length; i++) {
-          print(transcationList[i].itemsList);
-        }
+        
+
+        
       } else {
         print(
             "Failed to get transactions. Status Code: ${response.statusCode}");
@@ -228,4 +228,6 @@ class TranscationController extends GetxController {
       print("Error: $error");
     }
   }
+
+  
 }

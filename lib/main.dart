@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:leger_manager/Controller/dependency_injection.dart';
+import 'package:leger_manager/Controller/network_controller.dart';
 import 'package:leger_manager/test.dart';
 import 'package:leger_manager/test1.dart';
 import 'package:leger_manager/view/check_connection.dart';
@@ -12,6 +14,7 @@ import 'package:leger_manager/view/master_page/master_page_pages/Account_Module/
 
 void main() {
   runApp(MyApp());
+  Dependencyinjection.init();
 }
 
 class MyApp extends StatelessWidget {

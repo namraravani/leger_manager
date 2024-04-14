@@ -4,10 +4,11 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class AccountController extends GetxController {
-  RxString totalamt = "hello".obs;
-  RxString totaladvanceamt = "hello".obs;
+  RxString totalamt = "Loading".obs;
+  RxString totaladvanceamt = "Loading".obs;
   var rangeDatePickerValue = <DateTime?>[].obs;
   var isRangeLocked = false.obs;
+  RxInt totalAmount = 0.obs;
 
   void lockRange() {
     isRangeLocked.value = true;
@@ -26,6 +27,15 @@ class AccountController extends GetxController {
       int shopId = await getShopId(yourStringData);
       totalamt.value = await fetchAndUpdateTotalAmount(shopId);
       totaladvanceamt.value = await fetchAndUpdateTotaladvanceAmount(shopId);
+      int? calculatedTotal = await CalculateTotalAmt(
+        int.tryParse(totalamt.value),
+        int.tryParse(totaladvanceamt.value),
+      );
+      if (calculatedTotal != null) {
+        totalAmount.value = calculatedTotal;
+      } else {
+        totalAmount.value = 0;
+      }
     } catch (error) {
       print('Error: $error');
     }
@@ -116,6 +126,15 @@ class AccountController extends GetxController {
       }
     } catch (error) {
       return "No amount found";
+    }
+  }
+
+  Future<int?> CalculateTotalAmt(int? advanceamt, int? dueamt) async {
+    if (advanceamt != null && dueamt != null) {
+      int totalamt = advanceamt - dueamt;
+      return totalamt;
+    } else {
+      return null; // or handle null case as per your requirement
     }
   }
 

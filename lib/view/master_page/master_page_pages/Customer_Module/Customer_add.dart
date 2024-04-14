@@ -34,7 +34,6 @@ class _CustomerListPageState extends State<CustomerListPage> {
             TextField(
               controller: customercontroller.customername,
               decoration: InputDecoration(
-                  hintText: "jay",
                   labelText: "Enter Your Name",
                   filled: true,
                   fillColor: Colors.white,
@@ -51,7 +50,6 @@ class _CustomerListPageState extends State<CustomerListPage> {
               controller: customercontroller.customerinfo,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                  hintText: "9427662325",
                   labelText: "Enter Your Phone Number",
                   filled: true,
                   fillColor: Colors.white,
@@ -68,17 +66,43 @@ class _CustomerListPageState extends State<CustomerListPage> {
               children: [
                 SubmitButton(
                   onPressed: () async {
-                    await customercontroller.postCustomer();
-                    int shop_id =
-                        await transcationcontroller.getShopId("9427662325");
+                    // Validate customer name
+                    String? nameValidationMessage =
+                        customercontroller.validateCustomerName(
+                            customercontroller.customername.text);
 
-                    int cust_id = await transcationcontroller
-                        .getCustomerID(customercontroller.customerinfo.text);
-                    transcationcontroller.maintainRelation(shop_id, cust_id);
+                    // Validate phone number
+                    String? phoneValidationMessage =
+                        customercontroller.validatePhoneNumber(
+                            customercontroller.customerinfo.text);
 
-                    customercontroller.customername.clear();
-                    customercontroller.customerinfo.clear();
-                    Get.back();
+                    if (nameValidationMessage != null ||
+                        phoneValidationMessage != null) {
+                      // If any validation error, display error message
+                      String errorMessage = '';
+                      if (nameValidationMessage != null) {
+                        errorMessage += nameValidationMessage + '\n';
+                      }
+                      if (phoneValidationMessage != null) {
+                        errorMessage += phoneValidationMessage;
+                      }
+                      // Display error message using Snackbar or Toast
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        backgroundColor: AppColors.redColor,
+                        content: Text(errorMessage),
+                      ));
+                    } else {
+                      // All validations passed, execute logic
+                      await customercontroller.postCustomer();
+                      int shop_id =
+                          await transcationcontroller.getShopId("9427662325");
+                      int cust_id = await transcationcontroller
+                          .getCustomerID(customercontroller.customerinfo.text);
+                      transcationcontroller.maintainRelation(shop_id, cust_id);
+                      customercontroller.customername.clear();
+                      customercontroller.customerinfo.clear();
+                      Get.back();
+                    }
                   },
                   buttonText: 'Add Customer',
                 ),

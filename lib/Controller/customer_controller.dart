@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'dart:ffi';
+import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:leger_manager/Classes/Transcation.dart';
 import 'package:leger_manager/Classes/customer.dart';
+import 'package:leger_manager/Controller/network_controller.dart';
 import 'package:path_provider/path_provider.dart';
 
 class CustomerController extends GetxController {
@@ -17,16 +19,28 @@ class CustomerController extends GetxController {
   TextEditingController customerinfo = TextEditingController();
   RxList<Transcation> lastTransactionList = <Transcation>[].obs;
   RxList<double> totalSumList = <double>[].obs;
+  List<double> alltemporarysums = [];
   bool isCustomerListLoaded = false;
   RxList<Customer> storedcustomerlist = <Customer>[].obs;
   int count = 0;
+
   final box = GetStorage();
 
   @override
-  void onInit() {
+  Future<void> onInit() async {
+    super.onInit();
+    // final NetworkController networkController = Get.find<NetworkController>();
+
+    // print(networkController.isConnected.value);
+
     getCustomer();
 
-    super.onInit();
+    
+
+    // Access isConnected value
+    // bool isConnected = networkController.isConnected.value;
+
+    // // Use the value to perform actions based on internet connectivity status
   }
 
   void updateData() {
@@ -55,6 +69,11 @@ class CustomerController extends GetxController {
       );
 
       if (response.statusCode == 200) {
+        Customer cust = Customer(
+          customerName: customername.text,
+          contactInfo: customerinfo.text,
+        );
+        writeToLocalStorage(cust);
         await getCustomer();
       } else {
         print('Error adding customer: ${response.statusCode}');
@@ -62,6 +81,25 @@ class CustomerController extends GetxController {
     } catch (error) {
       print('Error: $error');
     }
+  }
+
+  Future<List<Customer>> readFromLocalStorage() async {
+    final appDocumentsDir = await getApplicationDocumentsDirectory();
+    final file = File('${appDocumentsDir.path}/customers.json');
+
+    if (!await file.exists()) {
+      return []; // Return an empty list if the file doesn't exist.
+    }
+
+    final contents = await file.readAsString();
+    final List<dynamic> jsonData = json.decode(contents);
+    final List<Customer> customers = jsonData
+        .map((dynamic item) => Customer.fromJson(item as Map<String, dynamic>))
+        .toList();
+
+    print(customers);
+
+    return customers;
   }
 
   void postCustomerFromContact(String name, String Phonenumber) async {
@@ -115,8 +153,6 @@ class CustomerController extends GetxController {
         update();
 
         loadLastTransactionDataForCustomers(customerlist);
-
-        writeToLocalStorage(customerlist);
       } else {
         print('Error fetching customers: ${response.statusCode}');
       }
@@ -125,21 +161,29 @@ class CustomerController extends GetxController {
     }
   }
 
-  void writeToLocalStorage(RxList<Customer> list) async {
-  final appDocumentsDir = await getApplicationDocumentsDirectory();
+  Future<void> writeToLocalStorage(Customer customer) async {
+    final appDocumentsDir = await getApplicationDocumentsDirectory();
+    final file = File('${appDocumentsDir.path}/customers.json');
 
-  final List<Map<String, dynamic>> customerData = list.map((obj) => {
-    'customername': obj.customerName,
-    'contactinfo': obj.contactInfo
-  }).toList();
+    List<Customer> customers = [];
 
-  // box.write('customerlist', customerData);
+    // Check if the file exists to either read its contents or initialize an empty list
+    if (await file.exists()) {
+      final contents = await file.readAsString();
+      final List<dynamic> jsonData = json.decode(contents);
+      customers = jsonData.map((item) => Customer.fromJson(item)).toList();
+    }
 
-  // if (box.hasData('customers')) {
-  //   final storedCustomers = box.read<List>('customers')!;
-  //   customerlist1 = storedCustomers.map((data) => Customer.fromJson(data)).toList().obs;
-  // }
-}
+    // Append the new customer to the list
+    customers.add(customer);
+
+    // Convert the list of Customer objects to a list of maps
+    final List<Map<String, dynamic>> customerData =
+        customers.map((c) => c.toJson()).toList();
+
+    // Write the updated list back to the file
+    await file.writeAsString(json.encode(customerData));
+  }
 
   Future<int> getShopId(String yourStringData) async {
     String apiUrl =
@@ -247,7 +291,6 @@ class CustomerController extends GetxController {
             "Failed to get transactions. Status Code: ${response.statusCode}");
       }
     } catch (error) {
-      print("Error: $error");
       throw Exception("Error: $error");
     }
   }
@@ -255,9 +298,11 @@ class CustomerController extends GetxController {
   Future<void> loadLastTransactionDataForCustomers(
       List<Customer> customers) async {
     try {
+      totalSumList.clear();
       lastTransactionList.clear();
-      // totalSumList.clear();
+      totalSumList.clear();
       List<Transcation> allLastTransactions = [];
+      List<double> alltemporarysums = [];
 
       for (Customer customer in customers) {
         try {
@@ -267,15 +312,16 @@ class CustomerController extends GetxController {
           Transcation lastTransaction =
               await getlasttranscation(shopID, customerID);
 
-          // double totalSum = await calculatesum(shopID, customerID);
+          double totalSum = await calculatesum(shopID, customerID);
           allLastTransactions.add(lastTransaction);
-          // totalSumList.add(totalSum);
+          alltemporarysums.add(totalSum);
         } catch (error) {
           print("Hello There is an Error");
         }
       }
 
       lastTransactionList.addAll(allLastTransactions);
+      totalSumList.addAll(alltemporarysums);
     } catch (error) {
       print('Error loading last transaction data: $error');
     }
@@ -316,4 +362,25 @@ class CustomerController extends GetxController {
     final formatter = DateFormat('ddMMM,y');
     return formatter.format(dateTime);
   }
+
+  String? validateCustomerName(String value) {
+  if (value.isEmpty) {
+    return 'Please enter your name';
+  }
+  // Additional validation rules can be added here
+  return null; // Return null if the input is valid
+}
+
+String? validatePhoneNumber(String value) {
+  if (value.isEmpty) {
+    return 'Please enter your phone number';
+  }
+  // Validate phone number format using a regular expression
+  // For example, checking if it's a valid 10-digit number
+  final RegExp phoneRegex = RegExp(r'^[0-9]{10}$');
+  if (!phoneRegex.hasMatch(value)) {
+    return 'Please enter a valid 10-digit phone number';
+  }
+  return null; // Return null if the input is valid
+}
 }

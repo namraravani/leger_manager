@@ -4,6 +4,7 @@ import 'package:leger_manager/Components/app_colors.dart';
 import 'package:leger_manager/Components/icon_logo.dart';
 
 import 'package:leger_manager/view/master_page/master_page_components/bottom_modal.dart';
+import 'package:leger_manager/view/master_page/master_page_components/search_page.dart';
 import 'package:leger_manager/view/master_page/master_page_pages/Account_Module/account_page.dart';
 import 'package:leger_manager/view/master_page/master_page_pages/Inventory_Module/inventory_page.dart';
 import 'package:leger_manager/view/profile_page.dart';
@@ -43,28 +44,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: Container(
               height: 55,
               width: 55,
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search by name',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(
-                      width: 1.0,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(
-                      color: AppColors.secondaryColor,
-                      width: 2.0,
-                    ),
-                  ),
-                  prefixIcon: Icon(
-                    Icons.search,
+              child: GestureDetector(
+                  onTap: () {
+                    Get.to(() => SearchPage());
+                  },
+                  child: Container(
                     color: AppColors.primaryColor,
-                  ),
-                ),
-              ),
+                  )),
             ),
           ),
           SizedBox(
@@ -72,7 +58,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           GestureDetector(
             onTap: () {
-               Get.to(AccountPage());
+              Get.to(AccountPage());
             },
             child: Container(
               decoration: BoxDecoration(

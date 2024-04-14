@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -9,11 +10,29 @@ class SupplierController extends GetxController {
   RxList<Customer> supplierlist = <Customer>[].obs;
   TextEditingController supplier_name = TextEditingController();
   TextEditingController supplier_contact_info = TextEditingController();
+  var isConnected = false.obs;
 
   @override
   void onInit() async {
-    getSuppliers(await getShopId("9427662325"));
+    updateConnectionStatus();
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      isConnected.value = (result == ConnectivityResult.mobile ||
+          result == ConnectivityResult.wifi);
+    });
+
+    if (isConnected == true) {
+      getSuppliers(await getShopId("9427662325"));
+    } else {
+      print("hello from supplier");
+    }
+
     super.onInit();
+  }
+
+  void updateConnectionStatus() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    isConnected.value = (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi);
   }
 
   Future<int> getShopId(String yourStringData) async {

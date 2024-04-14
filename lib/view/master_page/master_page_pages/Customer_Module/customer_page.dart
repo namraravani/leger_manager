@@ -101,7 +101,15 @@ class _CustomerPageState extends State<CustomerPage> {
                             Spacer(),
                             if (customercontroller.totalSumList.isNotEmpty &&
                                 index < customercontroller.totalSumList.length)
-                              Text("${customercontroller.totalSumList[index]}"),
+                              Text(
+                                "${customercontroller.totalSumList[index] < 0 ? customercontroller.totalSumList[index].abs() : customercontroller.totalSumList[index]}",
+                                style: TextStyle(
+                                  color:
+                                      customercontroller.totalSumList[index] < 0
+                                          ? Colors.red
+                                          : Colors.green,
+                                ),
+                              ),
                           ],
                         ),
                       ),
