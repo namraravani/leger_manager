@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -6,12 +7,14 @@ import 'package:leger_manager/Components/app_colors.dart';
 import 'package:leger_manager/Components/icon_logo.dart';
 import 'package:leger_manager/Components/text_logo.dart';
 import 'package:leger_manager/Controller/transcation_controller.dart';
+import 'package:leger_manager/view/master_page/master_page_pages/CustomerProfilePage.dart';
 import 'package:leger_manager/view/master_page/master_page_pages/Inventory_Module/Billing_Components/invoice.dart';
 import 'package:leger_manager/view/master_page/master_page_pages/Transcation_module/GivenPage.dart';
 import 'package:leger_manager/view/master_page/master_page_pages/Transcation_module/ReceviedPage.dart';
 import 'package:leger_manager/view/master_page/master_page_pages/Transcation_module/small_invoice.dart';
 
 import 'package:lottie/lottie.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TransactionPage extends StatelessWidget {
   TranscationController transcationcontroller =
@@ -42,9 +45,17 @@ class TransactionPage extends StatelessWidget {
                   customerName,
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.w900),
                 ),
-                Text(
-                  "View Profile",
-                  style: TextStyle(fontSize: 14, color: Colors.indigoAccent),
+                GestureDetector(
+                  onTap: () {
+                    Get.to(CustomerProfilePage(
+                      customerName: customerName,
+                      contactInfo: contactinfo,
+                    ));
+                  },
+                  child: Text(
+                    "View Profile",
+                    style: TextStyle(fontSize: 14, color: Colors.indigoAccent),
+                  ),
                 ),
               ],
             ),
@@ -155,32 +166,51 @@ class TransactionPage extends StatelessWidget {
                                   ),
                                 )
                             else
-                              Container(
-                                padding: EdgeInsets.all(8.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.green,
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.arrow_downward),
-                                    Icon(
-                                      Icons.currency_rupee_sharp,
-                                      color: Colors.white,
-                                    ),
-                                    Text(
-                                      transaction.data,
-                                      style: TextStyle(
-                                          fontSize: 25, color: Colors.white),
-                                    ),
-                                    SizedBox(width: 20),
-                                    Text(
-                                      transcationcontroller.formatTime(
-                                          transaction.transcationTime),
-                                      style: TextStyle(
-                                          fontSize: 16, color: Colors.white),
-                                    ),
-                                  ],
+                              GestureDetector(
+                                onLongPress: () {
+                                  AwesomeDialog(
+                                      context: context,
+                                      dialogType: DialogType.question,
+                                      animType: AnimType.topSlide,
+                                      showCloseIcon: true,
+                                      title: "Whatsapp",
+                                      desc: "Send this to whatsapp",
+                                      btnCancelOnPress: () {},
+                                      btnOkOnPress: () async {
+                                        transcationcontroller
+                                            .launchWhatsAppMessage(
+                                                contactinfo,
+                                                transaction.data,
+                                                transaction.transcationTime);
+                                      }).show();
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.green,
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.arrow_downward),
+                                      Icon(
+                                        Icons.currency_rupee_sharp,
+                                        color: Colors.white,
+                                      ),
+                                      Text(
+                                        transaction.data,
+                                        style: TextStyle(
+                                            fontSize: 25, color: Colors.white),
+                                      ),
+                                      SizedBox(width: 20),
+                                      Text(
+                                        transcationcontroller.formatTime(
+                                            transaction.transcationTime),
+                                        style: TextStyle(
+                                            fontSize: 16, color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                           ],

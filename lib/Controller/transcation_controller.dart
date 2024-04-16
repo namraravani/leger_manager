@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:leger_manager/Classes/Transcation.dart';
 import 'package:http/http.dart' as http;
 import 'package:leger_manager/Controller/customer_controller.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TranscationController extends GetxController {
   RxList<Transcation> transcationlist = <Transcation>[].obs;
@@ -216,10 +216,6 @@ class TranscationController extends GetxController {
             .toList();
 
         transcationlist.assignAll(transcationList);
-
-        
-
-        
       } else {
         print(
             "Failed to get transactions. Status Code: ${response.statusCode}");
@@ -229,5 +225,31 @@ class TranscationController extends GetxController {
     }
   }
 
-  
+  Future<void> launchWhatsAppMessage(String contactinfo, String transactionData,
+      String transactionTime) async {
+    try {
+      // Check if the contact number starts with "+91", if so, remove it
+      String contactWithoutPrefix = contactinfo.startsWith('+91')
+          ? contactinfo.substring(3)
+          : contactinfo;
+      String transcationTime = formatDateTime(transactionTime);
+      // Construct the WhatsApp URL with the modified contact number
+      var url =
+          'https://wa.me/+91$contactWithoutPrefix?text=${Uri.encodeComponent("You Have Given $transactionData at this $transcationTime")}';
+
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
+    } catch (e) {
+      print('Error launching URL: $e');
+    }
+  }
+
+  String formatDateTime(String dateTimeString) {
+    final DateTime dateTime = DateTime.parse(dateTimeString);
+    final formatter = DateFormat('ddMMM,y');
+    return formatter.format(dateTime);
+  }
 }

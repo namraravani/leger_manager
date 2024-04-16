@@ -1,6 +1,7 @@
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:leger_manager/Classes/allcustomer.dart';
 import 'package:leger_manager/Classes/customer.dart';
 import 'package:leger_manager/Components/app_colors.dart';
 import 'package:leger_manager/Controller/customer_controller.dart';
@@ -18,8 +19,8 @@ class _SearchPageState extends State<SearchPage> {
   CustomerController customercontroller = Get.find<CustomerController>();
   TranscationController transcationcontroller =
       Get.put(TranscationController());
-  List<Customer> customers = [];
-  List<Customer> customersFiltered = [];
+  List<AllCustomer> customers = [];
+  List<AllCustomer> customersFiltered = [];
   TextEditingController searchController = TextEditingController();
   bool customersLoaded = false;
   bool onTapExecuted = false;
@@ -37,7 +38,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   getAllContacts() async {
-    List<Customer> _customers = customercontroller.customerlist;
+    List<AllCustomer> _customers = await customercontroller.fetchCustomers();
 
     setState(() {
       customers = _customers;
@@ -46,11 +47,11 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   filterContacts() {
-    List<Customer> _customers = List.from(customers);
+    List<AllCustomer> _customers = List.from(customers);
     if (searchController.text.isNotEmpty) {
       _customers.retainWhere((customer) {
         String searchTerm = searchController.text.toLowerCase();
-        String customerName = customer.customerName.toLowerCase();
+        String customerName = customer.name.toLowerCase();
 
         return customerName.contains(searchTerm);
       });
@@ -105,45 +106,52 @@ class _SearchPageState extends State<SearchPage> {
                 itemCount:
                     isSearching ? customersFiltered.length : customers.length,
                 itemBuilder: (context, index) {
-                  Customer customer =
+                  AllCustomer customer =
                       isSearching ? customersFiltered[index] : customers[index];
 
                   String phoneNumber = customer.contactInfo;
 
                   return ListTile(
-                    onTap: () async {
-                      if (!onTapExecuted) {
-                        onTapExecuted = true;
+                      onTap: () async {
+                        if (!onTapExecuted) {
+                          onTapExecuted = true;
 
-                        int shop_id =
-                            await transcationcontroller.getShopId("9427662325");
+                          int shop_id = await transcationcontroller
+                              .getShopId("9427662325");
 
-                        int cust_id = await transcationcontroller
-                            .getCustomerID(phoneNumber);
+                          int cust_id = await transcationcontroller
+                              .getCustomerID(phoneNumber);
 
-                        transcationcontroller.maintainRelation(
-                            shop_id, cust_id);
+                          transcationcontroller.maintainRelation(
+                              shop_id, cust_id);
 
-                        transcationcontroller.getAlltranscation(
-                            shop_id, cust_id);
-                        Get.to(TransactionPage(
-                          customerName: customercontroller
-                              .customerlist[index].customerName,
-                          contactinfo: customercontroller
-                              .customerlist[index].contactInfo,
-                        ));
+                          transcationcontroller.getAlltranscation(
+                              shop_id, cust_id);
+                          Get.to(TransactionPage(
+                            customerName: customercontroller
+                                .customerlist[index].customerName,
+                            contactinfo: customercontroller
+                                .customerlist[index].contactInfo,
+                          ));
 
-                        // transcationcontroller.postTranscation(
-                        //     shop_id.toString(), cust_id.toString(), 0, "0");
+                          // transcationcontroller.postTranscation(
+                          //     shop_id.toString(), cust_id.toString(), 0, "0");
 
-                        Get.off(TransactionPage(
-                            customerName: customer.customerName ?? "No name",
-                            contactinfo: phoneNumber));
-                      }
-                    },
-                    title: Text(customer.customerName ?? ""),
-                    subtitle: Text(phoneNumber),
-                  );
+                          Get.off(TransactionPage(
+                              customerName: customer.name ?? "No name",
+                              contactinfo: phoneNumber));
+                        }
+                      },
+                      title: Text(customer.name ?? ""),
+                      subtitle: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(phoneNumber),
+                          Text(
+                            customer.type == 0 ? "Supplier" : "Customer",
+                          ),
+                        ],
+                      ));
                 },
               ),
             ),

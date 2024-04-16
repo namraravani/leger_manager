@@ -8,13 +8,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:leger_manager/Classes/Transcation.dart';
+import 'package:leger_manager/Classes/allcustomer.dart';
 import 'package:leger_manager/Classes/customer.dart';
 import 'package:leger_manager/Controller/network_controller.dart';
 import 'package:path_provider/path_provider.dart';
 
 class CustomerController extends GetxController {
   RxList<Customer> customerlist = <Customer>[].obs;
-  RxList<Customer> customerlist1 = <Customer>[].obs;
+  RxList<Customer> allcustomerlist = <Customer>[].obs;
+
   TextEditingController customername = TextEditingController();
   TextEditingController customerinfo = TextEditingController();
   RxList<Transcation> lastTransactionList = <Transcation>[].obs;
@@ -35,13 +37,24 @@ class CustomerController extends GetxController {
 
     getCustomer();
 
-    
-
     // Access isConnected value
     // bool isConnected = networkController.isConnected.value;
 
     // // Use the value to perform actions based on internet connectivity status
   }
+
+  Future<List<AllCustomer>> fetchCustomers() async {
+  final response = await http.get(Uri.parse('https://1kv5glweui.execute-api.ap-south-1.amazonaws.com/development/getallcustomers'));
+
+  if (response.statusCode == 200) {
+    // If the server returns a 200 OK response, parse the JSON
+    List<AllCustomer> customers = parseCustomers(response.body);
+    return customers;
+  } else {
+    // If the server did not return a 200 OK response, throw an exception.
+    throw Exception('Failed to load customers');
+  }
+}
 
   void updateData() {
     loadLastTransactionDataForCustomers(customerlist);
@@ -113,8 +126,6 @@ class CustomerController extends GetxController {
         'contactinfo': Phonenumber,
         'type': 1
       };
-
-      print("data added in map");
 
       String jsonData = json.encode(customerData);
 
@@ -190,7 +201,6 @@ class CustomerController extends GetxController {
         'https://1kv5glweui.execute-api.ap-south-1.amazonaws.com/development/getshopid';
 
     try {
-      print(yourStringData);
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -204,7 +214,7 @@ class CustomerController extends GetxController {
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
         int shopId = responseData['shopId'];
-        print(shopId);
+
         return shopId;
       } else {
         throw Exception(
@@ -364,23 +374,23 @@ class CustomerController extends GetxController {
   }
 
   String? validateCustomerName(String value) {
-  if (value.isEmpty) {
-    return 'Please enter your name';
+    if (value.isEmpty) {
+      return 'Please enter your name';
+    }
+    // Additional validation rules can be added here
+    return null; // Return null if the input is valid
   }
-  // Additional validation rules can be added here
-  return null; // Return null if the input is valid
-}
 
-String? validatePhoneNumber(String value) {
-  if (value.isEmpty) {
-    return 'Please enter your phone number';
+  String? validatePhoneNumber(String value) {
+    if (value.isEmpty) {
+      return 'Please enter your phone number';
+    }
+    // Validate phone number format using a regular expression
+    // For example, checking if it's a valid 10-digit number
+    final RegExp phoneRegex = RegExp(r'^[0-9]{10}$');
+    if (!phoneRegex.hasMatch(value)) {
+      return 'Please enter a valid 10-digit phone number';
+    }
+    return null; // Return null if the input is valid
   }
-  // Validate phone number format using a regular expression
-  // For example, checking if it's a valid 10-digit number
-  final RegExp phoneRegex = RegExp(r'^[0-9]{10}$');
-  if (!phoneRegex.hasMatch(value)) {
-    return 'Please enter a valid 10-digit phone number';
-  }
-  return null; // Return null if the input is valid
-}
 }
