@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "79519647699",
-    "project_id": "hcdproject-c4932",
-    "storage_bucket": "hcdproject-c4932.appspot.com"
+    "project_number": "326509409836",
+    "project_id": "ledgermanager-7395f",
+    "storage_bucket": "ledgermanager-7395f.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:79519647699:android:f200f9c012d7a98e8f5126",
+        "mobilesdk_app_id": "1:326509409836:android:1809d904bc0630a8adc389",
         "android_client_info": {
           "package_name": "com.example.leger_manager"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDag27XrH0FbGchHNGuNKegMjltFACX_wA"
+          "current_key": "AIzaSyAbs25xESo0gOfAgd_Xmmfepd6OihhgTUQ"
         }
       ],
       "services": {

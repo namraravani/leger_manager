@@ -87,8 +87,49 @@ class TransactionPage extends StatelessWidget {
                                     showModalBottomSheet(
                                       context: context,
                                       builder: (BuildContext context) {
-                                        return Invoice(
-                                            dataList: transaction.itemsList!);
+                                        return Container(
+                                          width: MediaQuery.of(context)
+                                              .size
+                                              .width, // Provide a constraint on width
+                                          child: Column(
+                                            children: [
+                                              Expanded(
+                                                child: Invoice(
+                                                    dataList:
+                                                        transaction.itemsList!),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(10.0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        transcationcontroller
+                                                            .saveInventoryDataToPdf(
+                                                                customerName,
+                                                                contactinfo,
+                                                                transaction
+                                                                    .transcationTime,
+                                                                transaction
+                                                                    .itemsList!);
+                                                      },
+                                                      child:
+                                                          Text("Save As PDF"),
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: () {},
+                                                      child: Text("Whatsapp"),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
                                       },
                                     );
                                   },

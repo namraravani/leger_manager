@@ -1,13 +1,19 @@
 import 'dart:convert';
 import 'dart:ffi';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:leger_manager/Classes/Transcation.dart';
 import 'package:http/http.dart' as http;
+import 'package:leger_manager/Components/app_colors.dart';
 import 'package:leger_manager/Controller/customer_controller.dart';
+import 'package:leger_manager/view/master_page/master_page_pages/Inventory_Module/Billing_Components/inventory_data.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class TranscationController extends GetxController {
   RxList<Transcation> transcationlist = <Transcation>[].obs;
@@ -251,5 +257,76 @@ class TranscationController extends GetxController {
     final DateTime dateTime = DateTime.parse(dateTimeString);
     final formatter = DateFormat('ddMMM,y');
     return formatter.format(dateTime);
+  }
+
+  Future<void> saveInventoryDataToPdf(String customerName, String contactInfo,
+      String transactionTime, List<InventoryData> inventoryDataList) async {
+    // Create PDF document
+    final pdf = pw.Document();
+
+    // Define table headers
+    final headers = [
+      'Company',
+      'Category',
+      'Product',
+      'Quantity',
+      'Total Price'
+    ];
+
+    // Define table rows
+    final List<List<String>> rows = inventoryDataList.map((data) {
+      return [
+        data.abc ?? '',
+        data.category ?? '',
+        data.product ?? '',
+        data.quantity?.toString() ?? '',
+        data.total_price?.toStringAsFixed(2) ?? '',
+      ];
+    }).toList();
+
+    // Create PDF table with custom styling
+    final table = pw.Table.fromTextArray(
+      headers: headers,
+      data: rows,
+      headerStyle: pw.TextStyle(
+        fontWeight: pw.FontWeight.bold,
+        fontSize: 12,
+        color: PdfColors.blue,
+      ),
+      cellAlignment: pw.Alignment.center,
+      cellStyle: pw.TextStyle(fontSize: 10),
+      border: pw.TableBorder.all(width: 1, color: PdfColors.grey),
+      headerDecoration: pw.BoxDecoration(color: PdfColors.grey200),
+      rowDecoration: pw.BoxDecoration(color: PdfColors.grey100),
+    );
+
+    // Add table to PDF document
+    pdf.addPage(
+      pw.MultiPage(
+        build: (pw.Context context) {
+          return [
+            pw.Center(
+                child: pw.Column(children: [
+              pw.Text('Bill of ${customerName} ',
+                  style: pw.TextStyle(fontSize: 20)),
+              pw.Text('${contactinfo} ', style: pw.TextStyle(fontSize: 20)),
+            ])),
+            pw.SizedBox(height: 20),
+            table,
+          ];
+        },
+      ),
+    );
+
+    final pdfBytes = await pdf.save();
+
+    // Save PDF document to file
+    final firebaseStorageRef = firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child('${transactionTime}-bill.pdf');
+    await firebaseStorageRef.putData(pdfBytes);
+
+    // Display success message
+    print('PDF saved successfully');
   }
 }

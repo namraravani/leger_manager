@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_core: ^2.24.2
   cloud_firestore: ^4.13.6
+
   get: ^4.6.5
   get_storage: ^2.0.3
   http: ^1.1.2
@@ -52,6 +53,9 @@ dependencies:
   awesome_dialog: ^3.2.0
   url_launcher: ^6.2.6
   share_plus: ^7.2.2
+  file_picker: ^8.0.0+1
+  firebase_storage: ^11.6.9
+  pdf: ^3.10.8
 
 dev_dependencies:
   flutter_test:
