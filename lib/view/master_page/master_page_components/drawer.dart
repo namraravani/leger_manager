@@ -38,66 +38,71 @@ class CustomDrawer extends StatelessWidget {
               ),
             ),
           ),
-          TextButton(
-              onPressed: () {},
-              child: IconLogo(
-                icon: Icon(
-                  Icons.blinds_closed_sharp,
-                  color: AppColors.secondaryColor,
-                ),
-                name: Text(
-                  "Statement",
-                  style: TextStyle(color: AppColors.secondaryColor),
-                ),
-              )),
-          TextButton(
-              onPressed: () {},
-              child: IconLogo(
-                icon: Icon(
-                  Icons.help,
-                  color: AppColors.secondaryColor,
-                ),
-                name: Text(
-                  "Help",
-                  style: TextStyle(color: AppColors.secondaryColor),
-                ),
-              )),
-          TextButton(
-              onPressed: () {},
-              child: IconLogo(
-                icon: Icon(
-                  Icons.more,
-                  color: AppColors.secondaryColor,
-                ),
-                name: Text(
-                  "About",
-                  style: TextStyle(color: AppColors.secondaryColor),
-                ),
-              )),
-          TextButton(
-              onPressed: () {},
-              child: IconLogo(
-                icon: Icon(
-                  Icons.settings,
-                  color: AppColors.secondaryColor,
-                ),
-                name: Text(
-                  "Settings",
-                  style: TextStyle(color: AppColors.secondaryColor),
-                ),
-              )),
-          TextButton(
-              onPressed: () {},
-              child: IconLogo(
-                icon: Icon(
-                  Icons.share,
-                  color: AppColors.secondaryColor,
-                ),
-                name: Text(
-                  "Share",
-                  style: TextStyle(color: AppColors.secondaryColor),
-                ),
-              )),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              TextButton(
+                  onPressed: () {},
+                  child: IconLogo(
+                    icon: Icon(
+                      Icons.blinds_closed_sharp,
+                      color: AppColors.secondaryColor,
+                    ),
+                    name: Text(
+                      "Statement",
+                      style: TextStyle(color: AppColors.secondaryColor),
+                    ),
+                  )),
+              TextButton(
+                  onPressed: () {},
+                  child: IconLogo(
+                    icon: Icon(
+                      Icons.help,
+                      color: AppColors.secondaryColor,
+                    ),
+                    name: Text(
+                      "Help",
+                      style: TextStyle(color: AppColors.secondaryColor),
+                    ),
+                  )),
+              TextButton(
+                  onPressed: () {},
+                  child: IconLogo(
+                    icon: Icon(
+                      Icons.more,
+                      color: AppColors.secondaryColor,
+                    ),
+                    name: Text(
+                      "About",
+                      style: TextStyle(color: AppColors.secondaryColor),
+                    ),
+                  )),
+              TextButton(
+                  onPressed: () {},
+                  child: IconLogo(
+                    icon: Icon(
+                      Icons.settings,
+                      color: AppColors.secondaryColor,
+                    ),
+                    name: Text(
+                      "Settings",
+                      style: TextStyle(color: AppColors.secondaryColor),
+                    ),
+                  )),
+              TextButton(
+                  onPressed: () {},
+                  child: IconLogo(
+                    icon: Icon(
+                      Icons.share,
+                      color: AppColors.secondaryColor,
+                    ),
+                    name: Text(
+                      "Share",
+                      style: TextStyle(color: AppColors.secondaryColor),
+                    ),
+                  )),
+            ],
+          ),
         ],
       ),
     );

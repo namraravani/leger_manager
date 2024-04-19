@@ -23,110 +23,104 @@ class _BillingFormState extends State<BillingForm> {
   Widget build(BuildContext context) {
     return Container(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Column(
-            children: [
-              Obx(
-                () => BillingField(
-                  icon: Icons.factory_sharp,
-                  hintText: "Enter Company Name",
-                  dropdownItems: billingcontroller.companyList.value,
-                  onDataChanged: (data) {
-                    setState(() {
-                      dataList[0] = data;
-                      widget.onDataListChanged(dataList.cast<String?>());
-                    });
-                  },
-                ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+            child: Obx(
+              () => BillingField(
+                icon: Icons.factory_sharp,
+                hintText: "Enter Company Name",
+                dropdownItems: billingcontroller.companyList.value,
+                onDataChanged: (data) {
+                  setState(() {
+                    dataList[0] = data;
+                    widget.onDataListChanged(dataList.cast<String?>());
+                  });
+                },
               ),
-              Obx(
-                () => BillingField(
-                  icon: Icons.category,
-                  hintText: "Enter The Sub Category",
-                  dropdownItems: billingcontroller.productList.value,
-                  onDataChanged: (data) {
-                    setState(() {
-                      dataList[1] = data;
-                      widget.onDataListChanged(dataList.cast<String?>());
-                    });
-                  },
-                ),
-              ),
-            ],
+            ),
           ),
-          SizedBox(
-            height: 20,
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Obx(
+              () => BillingField(
+                icon: Icons.category,
+                hintText: "Enter The Sub Category",
+                dropdownItems: billingcontroller.productList.value,
+                onDataChanged: (data) {
+                  setState(() {
+                    dataList[1] = data;
+                    widget.onDataListChanged(dataList.cast<String?>());
+                  });
+                },
+              ),
+            ),
           ),
-          Column(
-            children: [
-              Obx(
-                () => BillingField(
-                  icon: Icons.shopping_bag,
-                  hintText: "Enter The Product",
-                  dropdownItems: billingcontroller.productList.value,
-                  onDataChanged: (data) {
-                    setState(() {
-                      dataList[2] = data;
-                      widget.onDataListChanged(dataList.cast<String?>());
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Obx(
+              () => BillingField(
+                icon: Icons.shopping_bag,
+                hintText: "Enter The Product",
+                dropdownItems: billingcontroller.productList.value,
+                onDataChanged: (data) {
+                  setState(() {
+                    dataList[2] = data;
+                    widget.onDataListChanged(dataList.cast<String?>());
 
-                      int index = billingcontroller.productList.indexOf(data);
-                      if (index != -1 &&
-                          index < billingcontroller.productpriceList.length) {
-                        String productPriceString =
-                            billingcontroller.productpriceList[index];
-                        print(
-                            "Hello Namra I am Here I am Product Price : ${productPriceString}");
-                        productPrice =
-                            double.tryParse(productPriceString) ?? 0.0;
-
-                        print(
-                            "Hello Namra I am Here I am Product Price : ${productPrice}");
-                        
-                      }
-                    });
-                  },
+                    int index = billingcontroller.productList.indexOf(data);
+                    if (index != -1 &&
+                        index < billingcontroller.productpriceList.length) {
+                      String productPriceString =
+                          billingcontroller.productpriceList[index];
+                      productPrice = double.tryParse(productPriceString) ?? 0.0;
+                    }
+                  });
+                },
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Container(
+              height: 70,
+              width: 300,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: Colors.blue,
+                  width: 2,
                 ),
               ),
-              Container(
-                height: 70,
-                width: 200,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: Colors.blue,
-                    width: 2,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.shopping_cart),
-                    Expanded(
-                      child: TextField(
-                        onChanged: (data) {
-                          setState(() {
-                            dataList[3] = data;
-                            widget.onDataListChanged(dataList.cast<String?>());
-                            int quantity = int.tryParse(data) ?? 0;
-                            String finProductPriceAsString =
-                                (productPrice * quantity).toString();
-                            print("${finProductPriceAsString}");
-                            dataList[4] = finProductPriceAsString;
-                            widget.onDataListChanged(dataList.cast<String?>());
-                          });
-                        },
-                        controller: billingcontroller.quan,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "Enter Quantity"),
-                      ),
+              child: Row(
+                children: [
+                  Icon(Icons.shopping_cart),
+                  Expanded(
+                    child: TextField(
+                      onChanged: (data) {
+                        setState(() {
+                          dataList[3] = data;
+                          widget.onDataListChanged(dataList.cast<String?>());
+                          int quantity = int.tryParse(data) ?? 0;
+                          String finProductPriceAsString =
+                              (productPrice * quantity).toString();
+                          print("${finProductPriceAsString}");
+                          dataList[4] = finProductPriceAsString;
+                          widget.onDataListChanged(dataList.cast<String?>());
+                        });
+                      },
+                      controller: billingcontroller.quan,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          border: InputBorder.none, hintText: "Enter Quantity"),
                     ),
-                  ],
-                ),
-              )
-            ],
-          ),
+                  ),
+                ],
+              ),
+            ),
+          )
         ],
       ),
     );

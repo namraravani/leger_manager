@@ -62,7 +62,7 @@ class _CustomerPageState extends State<CustomerPage> {
 
   Widget buildCustomerListView() {
     return Padding(
-      padding: const EdgeInsets.only(top: 50.0),
+      padding: const EdgeInsets.only(top: 10.0),
       child: Obx(
         () {
           if (customercontroller.customerlist.isEmpty) {
@@ -128,7 +128,7 @@ class _CustomerPageState extends State<CustomerPage> {
                               Text(
                                 customercontroller
                                     .lastTransactionList[index].data,
-                                style: TextStyle(fontWeight: FontWeight.w900),
+                                style: TextStyle(fontWeight: FontWeight.w400),
                               ),
                             SizedBox(width: 5),
                             if (customercontroller
@@ -136,8 +136,20 @@ class _CustomerPageState extends State<CustomerPage> {
                                 index <
                                     customercontroller
                                         .lastTransactionList.length)
-                              Text(
-                                  "Payment added on ${customercontroller.formatDateTime(customercontroller.lastTransactionList[index].transcationTime)}"),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Payment added on ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w400),
+                                  ),
+                                  Text(
+                                    "${customercontroller.formatDateTime(customercontroller.lastTransactionList[index].transcationTime)}",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w400),
+                                  )
+                                ],
+                              ),
                           ],
                         ),
                       ),

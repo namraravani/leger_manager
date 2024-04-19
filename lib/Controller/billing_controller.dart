@@ -16,8 +16,6 @@ class BillingController extends GetxController {
   TextEditingController quan = TextEditingController();
   int? amount;
   int? parsedPrice;
-  
-  
 
   @override
   void onInit() {
@@ -208,7 +206,6 @@ class BillingController extends GetxController {
   double calculateTotalPrice(List<InventoryData> datalist) {
     double total = 0.0;
     for (InventoryData data in datalist) {
-      
       total += data.total_price ?? 0.0;
     }
 
@@ -241,7 +238,7 @@ class BillingController extends GetxController {
   // }
 
   Future<void> postInventoryData(int shopId, int customerId,
-      List<InventoryData> inventoryList,String type) async {
+      List<InventoryData> inventoryList, String type) async {
     try {
       print(shopId);
       print(customerId);
@@ -250,11 +247,8 @@ class BillingController extends GetxController {
         print(inventoryList[i].category);
       }
       if (inventoryList.isEmpty) {
-        print("Inventory list is empty");
         return;
       }
-
-      print("I am In the Try Block");
 
       List<Map<String, dynamic>> itemsList = inventoryList
           .map((data) => {
@@ -278,9 +272,6 @@ class BillingController extends GetxController {
           'items': itemsList,
         }),
       );
-
-      print("I Near To Get Executed");
-      print('Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
         // Successfully posted the inventory data

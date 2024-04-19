@@ -39,22 +39,32 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ],
       ),
       title: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Expanded(
             child: Container(
               height: 55,
               width: 55,
               child: GestureDetector(
-                  onTap: () {
-                    Get.to(() => SearchPage());
-                  },
-                  child: Container(
+                onTap: () {
+                  Get.to(() => SearchPage());
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
                     color: AppColors.primaryColor,
-                  )),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Icon(Icons.search_sharp,
+                        color: AppColors.secondaryColor),
+                  ),
+                ),
+              ),
             ),
           ),
           SizedBox(
-            width: 10,
+            width: 200,
           ),
           GestureDetector(
             onTap: () {
