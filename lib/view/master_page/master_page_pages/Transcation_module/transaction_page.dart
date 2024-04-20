@@ -110,6 +110,8 @@ class TransactionPage extends StatelessWidget {
                                                       onPressed: () {
                                                         transcationcontroller
                                                             .saveInventoryDataToPdf(
+                                                                transaction
+                                                                    .transid,
                                                                 customerName,
                                                                 contactinfo,
                                                                 transaction
@@ -121,7 +123,18 @@ class TransactionPage extends StatelessWidget {
                                                           Text("Save As PDF"),
                                                     ),
                                                     TextButton(
-                                                      onPressed: () {},
+                                                      onPressed: () {
+                                                        transcationcontroller
+                                                            .shareFileToWhatsapp(
+                                                                transaction
+                                                                    .transid,
+                                                                customerName,
+                                                                contactinfo,
+                                                                transaction
+                                                                    .transcationTime,
+                                                                transaction
+                                                                    .itemsList!);
+                                                      },
                                                       child: Text("Whatsapp"),
                                                     ),
                                                   ],

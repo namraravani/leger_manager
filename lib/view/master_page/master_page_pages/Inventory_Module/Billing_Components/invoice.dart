@@ -41,111 +41,148 @@ class Invoice extends StatelessWidget {
                     "Date : " + DateFormat('d/M/yyyy').format(DateTime.now()),
                     style: TextStyle(fontSize: 15),
                   ),
-                  Divider(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  SizedBox(height: 10),
+                  Table(
+                    defaultColumnWidth: FixedColumnWidth(50.0),
                     children: [
-                      Text(
-                        "Item",
-                        style: TextStyle(fontSize: 10),
+                      TableRow(
+                        children: [
+                          Divider(),
+                          Divider(),
+                          Divider(),
+                          Divider(),
+                          Divider(),
+                          Divider(),
+                        ],
                       ),
-                      Text(
-                        "Company",
-                        style: TextStyle(fontSize: 10),
-                      ),
-                      Text(
-                        "Category",
-                        style: TextStyle(fontSize: 10),
-                      ),
-                      Text(
-                        "Product",
-                        style: TextStyle(fontSize: 10),
-                      ),
-                      Text(
-                        "Quantity",
-                        style: TextStyle(fontSize: 10),
-                      ),
-                      Text(
-                        "Price",
-                        style: TextStyle(fontSize: 10),
-                      ),
-                    ],
-                  ),
-                  Divider(),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.whiteColor,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    height: 220,
-                    child: ListView.builder(
-                      itemCount: dataList.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "${index + 1}",
-                                      style: TextStyle(fontSize: 10),
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "${dataList[index].abc}",
-                                      style: TextStyle(fontSize: 10),
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "${dataList[index].category}",
-                                      style: TextStyle(fontSize: 10),
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "${dataList[index].product}",
-                                      style: TextStyle(fontSize: 10),
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "1",
-                                      style: TextStyle(fontSize: 10),
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      "${dataList[index].quantity}",
-                                      style: TextStyle(fontSize: 10),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                      TableRow(
+                        children: [
+                          TableCell(
+                            child: Center(
+                              child: Text(
+                                'Item',
+                                style: TextStyle(fontSize: 10),
+                              ),
                             ),
                           ),
-                        );
-                      },
-                    ),
+                          TableCell(
+                            child: Center(
+                              child: Text(
+                                'Company',
+                                style: TextStyle(fontSize: 10),
+                              ),
+                            ),
+                          ),
+                          TableCell(
+                            child: Center(
+                              child: Text(
+                                'Category',
+                                style: TextStyle(fontSize: 10),
+                              ),
+                            ),
+                          ),
+                          TableCell(
+                            child: Center(
+                              child: Text(
+                                'Product',
+                                style: TextStyle(fontSize: 10),
+                              ),
+                            ),
+                          ),
+                          TableCell(
+                            child: Center(
+                              child: Text(
+                                'Quantity',
+                                style: TextStyle(fontSize: 10),
+                              ),
+                            ),
+                          ),
+                          TableCell(
+                            child: Center(
+                              child: Text(
+                                'Price',
+                                style: TextStyle(fontSize: 10),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      TableRow(
+                        children: [
+                          Divider(),
+                          Divider(),
+                          Divider(),
+                          Divider(),
+                          Divider(),
+                          Divider(),
+                        ],
+                      ),
+                      TableRow(
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          SizedBox(),
+                          SizedBox(),
+                          SizedBox(),
+                          SizedBox(),
+                          SizedBox(),
+                        ],
+                      ),
+                      for (int index = 0; index < dataList.length; index++)
+                        TableRow(
+                          children: [
+                            TableCell(
+                              child: Center(
+                                child: Text(
+                                  '${index + 1}',
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                              ),
+                            ),
+                            TableCell(
+                              child: Center(
+                                child: Text(
+                                  '${dataList[index].abc}',
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                              ),
+                            ),
+                            TableCell(
+                              child: Center(
+                                child: Text(
+                                  '${dataList[index].category}',
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                              ),
+                            ),
+                            TableCell(
+                              child: Center(
+                                child: Text(
+                                  '${dataList[index].product}',
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                              ),
+                            ),
+                            TableCell(
+                              child: Center(
+                                child: Text(
+                                  '${dataList[index].quantity}',
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                              ),
+                            ),
+                            TableCell(
+                              child: Center(
+                                child: Text(
+                                  '${dataList[index].total_price}',
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                    ],
                   ),
                   Divider(),
                   Row(
@@ -153,7 +190,8 @@ class Invoice extends StatelessWidget {
                     children: [
                       Text("Total"),
                       Text(
-                          "${billingcontroller.calculateTotalPrice(dataList)}"),
+                        "${billingcontroller.calculateTotalPrice(dataList)}",
+                      ),
                     ],
                   )
                 ],

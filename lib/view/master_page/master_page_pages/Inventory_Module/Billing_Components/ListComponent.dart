@@ -7,7 +7,7 @@ class ListComponent extends StatelessWidget {
   final String product;
   final String quantity;
   final String totalprice;
-  final VoidCallback onDeletePressed; // Callback function for delete action
+  final VoidCallback onDeletePressed;
 
   const ListComponent({
     Key? key,
@@ -16,7 +16,7 @@ class ListComponent extends StatelessWidget {
     required this.product,
     required this.quantity,
     required this.totalprice,
-    required this.onDeletePressed, // Accepting callback function
+    required this.onDeletePressed,
   }) : super(key: key);
 
   @override
@@ -92,13 +92,16 @@ class ListComponent extends StatelessWidget {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 35.0, bottom: 25),
+                padding: const EdgeInsets.only(
+                  left: 10,
+                  right: 20,
+                  bottom: 20,
+                ),
                 child: Container(
-                  height: 10,
-                  width: 10,
+                  height: 30,
+                  width: 30,
                   child: IconButton(
-                    onPressed:
-                        onDeletePressed, // Invoke callback function when pressed
+                    onPressed: onDeletePressed,
                     icon: Icon(
                       Icons.delete,
                       color: AppColors.redColor,

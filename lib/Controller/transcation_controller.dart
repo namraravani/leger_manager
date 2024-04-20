@@ -8,12 +8,14 @@ import 'package:intl/intl.dart';
 import 'package:leger_manager/Classes/Transcation.dart';
 import 'package:http/http.dart' as http;
 import 'package:leger_manager/Components/app_colors.dart';
+import 'package:leger_manager/Controller/billing_controller.dart';
 import 'package:leger_manager/Controller/customer_controller.dart';
 import 'package:leger_manager/view/master_page/master_page_pages/Inventory_Module/Billing_Components/inventory_data.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:share_plus/share_plus.dart';
 
 class TranscationController extends GetxController {
   RxList<Transcation> transcationlist = <Transcation>[].obs;
@@ -23,6 +25,7 @@ class TranscationController extends GetxController {
   RxString contactinfo = ''.obs;
 
   final CustomerController customerController = Get.put(CustomerController());
+  final BillingController billingController = Get.put(BillingController());
 
   @override
   void setMobileNumber(String number) {
@@ -259,60 +262,25 @@ class TranscationController extends GetxController {
     return formatter.format(dateTime);
   }
 
-  Future<void> saveInventoryDataToPdf(String customerName, String contactInfo,
-      String transactionTime, List<InventoryData> inventoryDataList) async {
-    // Create PDF document
+  Future<void> shareFileToWhatsapp(
+      int transid,
+      String customerName,
+      String contactInfo,
+      String transactionTime,
+      List<InventoryData> inventoryDataList) async {
     final pdf = pw.Document();
-
-    // Define table headers
-    final headers = [
-      'Company',
-      'Category',
-      'Product',
-      'Quantity',
-      'Total Price'
-    ];
-
-    // Define table rows
-    final List<List<String>> rows = inventoryDataList.map((data) {
-      return [
-        data.abc ?? '',
-        data.category ?? '',
-        data.product ?? '',
-        data.quantity?.toString() ?? '',
-        data.total_price?.toStringAsFixed(2) ?? '',
-      ];
-    }).toList();
-
-    // Create PDF table with custom styling
-    final table = pw.Table.fromTextArray(
-      headers: headers,
-      data: rows,
-      headerStyle: pw.TextStyle(
-        fontWeight: pw.FontWeight.bold,
-        fontSize: 12,
-        color: PdfColors.blue,
-      ),
-      cellAlignment: pw.Alignment.center,
-      cellStyle: pw.TextStyle(fontSize: 10),
-      border: pw.TableBorder.all(width: 1, color: PdfColors.grey),
-      headerDecoration: pw.BoxDecoration(color: PdfColors.grey200),
-      rowDecoration: pw.BoxDecoration(color: PdfColors.grey100),
-    );
-
-    // Add table to PDF document
     pdf.addPage(
       pw.MultiPage(
         build: (pw.Context context) {
           return [
-            pw.Center(
-                child: pw.Column(children: [
-              pw.Text('Bill of ${customerName} ',
-                  style: pw.TextStyle(fontSize: 20)),
-              pw.Text('${contactinfo} ', style: pw.TextStyle(fontSize: 20)),
-            ])),
-            pw.SizedBox(height: 20),
-            table,
+            pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.center,
+                mainAxisAlignment: pw.MainAxisAlignment.center,
+                children: [
+                  buildHeader(customerName, contactInfo, transactionTime),
+                  pw.SizedBox(height: 20),
+                  buildTable(inventoryDataList),
+                ]),
           ];
         },
       ),
@@ -320,13 +288,148 @@ class TranscationController extends GetxController {
 
     final pdfBytes = await pdf.save();
 
+    final filePath = '/storage/emulated/0/Download/${transid}Bill.pdf';
+
+    final file = File(filePath);
+    await file.writeAsBytes(await pdf.save());
+
+    String contactWithoutPrefix =
+        contactInfo.startsWith('+91') ? contactInfo.substring(3) : contactInfo;
+
+    // var url = "whatsapp://send?phone=$contactWithoutPrefix&file=$filePath";
+
+    Share.shareFiles([filePath], text: "This is Your Bill");
+
+    print('PDF Whatsapped successfully');
+  }
+
+  Future<void> saveInventoryDataToPdf(
+      int transid,
+      String customerName,
+      String contactInfo,
+      String transactionTime,
+      List<InventoryData> inventoryDataList) async {
+    final pdf = pw.Document();
+
+    pdf.addPage(
+      pw.MultiPage(
+        build: (pw.Context context) {
+          return [
+            pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.center,
+                mainAxisAlignment: pw.MainAxisAlignment.center,
+                children: [
+                  buildHeader(customerName, contactInfo, transactionTime),
+                  pw.SizedBox(height: 20),
+                  buildTable(inventoryDataList),
+                ]),
+          ];
+        },
+      ),
+    );
+
+    final pdfBytes = await pdf.save();
+
+    final filePath =
+        '/storage/emulated/0/Download/${transid}TransactionDetail.pdf';
+
     // Save PDF document to file
-    final firebaseStorageRef = firebase_storage.FirebaseStorage.instance
-        .ref()
-        .child('${transactionTime}-bill.pdf');
-    await firebaseStorageRef.putData(pdfBytes);
+    final file = File(filePath);
+    await file.writeAsBytes(await pdf.save());
 
     // Display success message
     print('PDF saved successfully');
   }
+
+  pw.Widget buildHeader(
+          String customername, String customerinfo, String transtime) =>
+      pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.center,
+        mainAxisAlignment: pw.MainAxisAlignment.center,
+        children: [
+          pw.Text(customername),
+          pw.Text(customerinfo),
+          pw.Text("Invoice"),
+          pw.Text("Generated By Ledger Manager"),
+          pw.Text("Date :- " + formatDateTime(transtime)),
+        ],
+      );
+
+  pw.Widget buildTableCell(String text) {
+    return pw.Container(
+      alignment: pw.Alignment.center,
+      padding: pw.EdgeInsets.all(5),
+      child: pw.Text(
+        text,
+        style: pw.TextStyle(fontSize: 10),
+      ),
+    );
+  }
+
+  pw.Widget buildTable(List<InventoryData> inventoryDataList) => pw.Column(
+        mainAxisAlignment: pw.MainAxisAlignment.center,
+        children: [
+          pw.Table(defaultColumnWidth: pw.FixedColumnWidth(50.0), children: [
+            pw.TableRow(
+              children: [
+                pw.Divider(),
+                pw.Divider(),
+                pw.Divider(),
+                pw.Divider(),
+                pw.Divider(),
+                pw.Divider(),
+              ],
+            ),
+            pw.TableRow(
+              children: [
+                buildTableCell("Item"),
+                buildTableCell("Company"),
+                buildTableCell("Category"),
+                buildTableCell("Product"),
+                buildTableCell("Quantity"),
+                buildTableCell("Price"),
+              ],
+            ),
+            pw.TableRow(
+              children: [
+                pw.Divider(),
+                pw.Divider(),
+                pw.Divider(),
+                pw.Divider(),
+                pw.Divider(),
+                pw.Divider(),
+              ],
+            ),
+            for (int index = 0; index < inventoryDataList.length; index++)
+              pw.TableRow(children: [
+                buildTableCell("${index + 1}"),
+                buildTableCell('${inventoryDataList[index].abc}'),
+                buildTableCell('${inventoryDataList[index].category}'),
+                buildTableCell('${inventoryDataList[index].product}'),
+                buildTableCell('${inventoryDataList[index].quantity}'),
+                buildTableCell('${inventoryDataList[index].total_price}'),
+              ]),
+            pw.TableRow(
+              children: [
+                pw.Divider(),
+                pw.Divider(),
+                pw.Divider(),
+                pw.Divider(),
+                pw.Divider(),
+                pw.Divider(),
+              ],
+            ),
+          ]),
+          pw.Padding(
+              padding: pw.EdgeInsets.only(left: 25, right: 25),
+              child: pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Total"),
+                  pw.Text(
+                      "${billingController.calculateTotalPrice(inventoryDataList)}"),
+                ],
+              )),
+        ],
+      );
 }
