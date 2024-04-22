@@ -137,6 +137,22 @@ class _AccountPageState extends State<AccountPage> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 100,
+            ),
+            Container(
+              height: 300,
+              width: 300,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(width: 1.0, color: AppColors.secondaryColor),
+              ),
+              child: Column(
+                children: [
+                  Text("Hello"),
+                ],
+              ),
+            )
           ],
         ),
       ),

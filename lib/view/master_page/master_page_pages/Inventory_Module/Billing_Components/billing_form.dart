@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:leger_manager/Components/common_input_formatters.dart';
 import 'package:leger_manager/Controller/billing_controller.dart';
 import 'billing_field.dart';
 
@@ -113,6 +114,7 @@ class _BillingFormState extends State<BillingForm> {
                       },
                       controller: billingcontroller.quan,
                       keyboardType: TextInputType.number,
+                      inputFormatters: getCommonInputFormatters(),
                       decoration: InputDecoration(
                           border: InputBorder.none, hintText: "Enter Quantity"),
                     ),

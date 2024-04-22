@@ -146,9 +146,33 @@ class _SearchPageState extends State<SearchPage> {
                       subtitle: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(phoneNumber),
                           Text(
-                            customer.type == 0 ? "Supplier" : "Customer",
+                            phoneNumber,
+                            style: TextStyle(fontWeight: FontWeight.w300),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryColor,
+                              borderRadius: BorderRadius.circular(10.0),
+                              border: Border.all(
+                                width: 1.0,
+                              ),
+                            ),
+                            height: 35,
+                            width: 100,
+                            child: Center(
+                              child: customer.type == 0
+                                  ? Text(
+                                      "Supplier",
+                                      style: TextStyle(
+                                          color: AppColors.greenColor),
+                                    )
+                                  : Text(
+                                      "Customer",
+                                      style: TextStyle(
+                                          color: AppColors.secondaryColor),
+                                    ),
+                            ),
                           ),
                         ],
                       ));

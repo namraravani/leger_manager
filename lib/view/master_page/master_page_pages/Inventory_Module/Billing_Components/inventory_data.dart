@@ -16,4 +16,14 @@ class InventoryData {
       quantity: json['quantity'] ?? 0,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'abc': abc,
+      'category': category,
+      'product': product,
+      'quantity': quantity,
+      'total_price': total_price,
+    };
+  }
 }

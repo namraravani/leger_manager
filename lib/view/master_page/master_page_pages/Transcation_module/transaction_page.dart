@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:leger_manager/Components/CircleAvatar.dart';
 import 'package:leger_manager/Components/app_colors.dart';
+import 'package:leger_manager/Components/elevated_button.dart';
 import 'package:leger_manager/Components/icon_logo.dart';
 import 'package:leger_manager/Components/text_logo.dart';
 import 'package:leger_manager/Controller/transcation_controller.dart';
@@ -96,7 +97,9 @@ class TransactionPage extends StatelessWidget {
                                               Expanded(
                                                 child: Invoice(
                                                     dataList:
-                                                        transaction.itemsList!),
+                                                        transaction.itemsList!,
+                                                    customerName: customerName,
+                                                    customerinfo: contactinfo),
                                               ),
                                               Padding(
                                                 padding:
@@ -106,7 +109,7 @@ class TransactionPage extends StatelessWidget {
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                   children: [
-                                                    TextButton(
+                                                    CustomButton(
                                                       onPressed: () {
                                                         transcationcontroller
                                                             .saveInventoryDataToPdf(
@@ -118,11 +121,21 @@ class TransactionPage extends StatelessWidget {
                                                                     .transcationTime,
                                                                 transaction
                                                                     .itemsList!);
+
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                                SnackBar(
+                                                          backgroundColor:
+                                                              AppColors
+                                                                  .greenColor,
+                                                          content: Text(
+                                                              "Bill saved successfully"),
+                                                        ));
                                                       },
-                                                      child:
-                                                          Text("Save As PDF"),
+                                                      buttonText: "Save as PDF",
                                                     ),
-                                                    TextButton(
+                                                    CustomButton(
                                                       onPressed: () {
                                                         transcationcontroller
                                                             .shareFileToWhatsapp(
@@ -135,7 +148,7 @@ class TransactionPage extends StatelessWidget {
                                                                 transaction
                                                                     .itemsList!);
                                                       },
-                                                      child: Text("Whatsapp"),
+                                                      buttonText: "Whatsapp",
                                                     ),
                                                   ],
                                                 ),
@@ -184,6 +197,8 @@ class TransactionPage extends StatelessWidget {
                                           height: 200,
                                           child: SmallInvoice(
                                             dataList: transaction.itemsList!,
+                                            customerName: customerName,
+                                            customerInfo: contactinfo,
                                           ),
                                         )
                                       ],
@@ -191,32 +206,53 @@ class TransactionPage extends StatelessWidget {
                                   ),
                                 )
                               else
-                                Container(
-                                  padding: EdgeInsets.all(8.0),
-                                  decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.arrow_upward),
-                                      Icon(
-                                        Icons.currency_rupee_sharp,
-                                        color: Colors.white,
-                                      ),
-                                      Text(
-                                        transaction.data,
-                                        style: TextStyle(
-                                            fontSize: 25, color: Colors.white),
-                                      ),
-                                      SizedBox(width: 20),
-                                      Text(
-                                        transcationcontroller.formatTime(
-                                            transaction.transcationTime),
-                                        style: TextStyle(
-                                            fontSize: 16, color: Colors.white),
-                                      ),
-                                    ],
+                                GestureDetector(
+                                  onLongPress: () {
+                                    AwesomeDialog(
+                                        context: context,
+                                        dialogType: DialogType.info,
+                                        animType: AnimType.topSlide,
+                                        showCloseIcon: true,
+                                        title: "Whatsapp",
+                                        desc: "Send this to whatsapp",
+                                        btnCancelOnPress: () {},
+                                        btnOkOnPress: () async {
+                                          transcationcontroller
+                                              .launchWhatsAppMessage(
+                                                  contactinfo,
+                                                  transaction.data,
+                                                  transaction.transcationTime);
+                                        }).show();
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(8.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.arrow_upward),
+                                        Icon(
+                                          Icons.currency_rupee_sharp,
+                                          color: Colors.white,
+                                        ),
+                                        Text(
+                                          transaction.data,
+                                          style: TextStyle(
+                                              fontSize: 25,
+                                              color: Colors.white),
+                                        ),
+                                        SizedBox(width: 20),
+                                        Text(
+                                          transcationcontroller.formatTime(
+                                              transaction.transcationTime),
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 )
                             else
@@ -228,7 +264,7 @@ class TransactionPage extends StatelessWidget {
                                       animType: AnimType.topSlide,
                                       showCloseIcon: true,
                                       title: "Whatsapp",
-                                      desc: "Send this to whatsapp",
+                                      desc: "Send this to whatsapp ?",
                                       btnCancelOnPress: () {},
                                       btnOkOnPress: () async {
                                         transcationcontroller
@@ -281,46 +317,47 @@ class TransactionPage extends StatelessWidget {
             right: 16,
             child: Container(
               color: Colors.grey[300],
-              child: Row(
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      onPrimary: Colors.green,
-                      minimumSize: Size(120, 40),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        onPrimary: Colors.green,
+                        minimumSize: Size(150, 50),
+                      ),
+                      onPressed: () {
+                        Get.off(ReceviedPage(
+                          customerName: customerName,
+                          customerInfo: contactinfo,
+                        ));
+                      },
+                      child: IconLogo(
+                        icon: Icon(Icons.arrow_downward),
+                        name: Text("Recived"),
+                      ),
                     ),
-                    onPressed: () {
-                      Get.off(ReceviedPage(
-                        customerName: customerName,
-                        customerInfo: contactinfo,
-                      ));
-                    },
-                    child: IconLogo(
-                      icon: Icon(Icons.arrow_downward),
-                      name: Text("Recived"),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        onPrimary: Colors.red,
+                        minimumSize: Size(150, 50),
+                      ),
+                      onPressed: () {
+                        Get.off((GivenPage(
+                          customerName: customerName,
+                          customerInfo: contactinfo,
+                        )));
+                      },
+                      child: IconLogo(
+                        icon: Icon(Icons.arrow_upward),
+                        name: Text("Given"),
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 100,
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      onPrimary: Colors.red,
-                      minimumSize: Size(120, 40),
-                    ),
-                    onPressed: () {
-                      Get.off((GivenPage(
-                        customerName: customerName,
-                        customerInfo: contactinfo,
-                      )));
-                    },
-                    child: IconLogo(
-                      icon: Icon(Icons.arrow_upward),
-                      name: Text("Given"),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

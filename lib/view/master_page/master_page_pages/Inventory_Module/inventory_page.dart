@@ -17,8 +17,14 @@ import 'package:lottie/lottie.dart';
 class InventoryPage extends StatefulWidget {
   int shopId;
   int custId;
+  String customerName;
+  String customerinfo;
 
-  InventoryPage({required this.shopId, required this.custId});
+  InventoryPage(
+      {required this.shopId,
+      required this.custId,
+      required this.customerName,
+      required this.customerinfo});
   @override
   _InventoryPageState createState() => _InventoryPageState();
 }
@@ -178,7 +184,11 @@ class _InventoryPageState extends State<InventoryPage> {
                       showModalBottomSheet(
                         context: context,
                         builder: (BuildContext context) {
-                          return Invoice(dataList: dataList);
+                          return Invoice(
+                            dataList: dataList,
+                            customerName: widget.customerName,
+                            customerinfo: widget.customerinfo,
+                          );
                         },
                       );
                     },

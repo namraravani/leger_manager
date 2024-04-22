@@ -63,20 +63,46 @@ class SupplierAddPage extends StatelessWidget {
               children: [
                 SubmitButton(
                   onPressed: () async {
-                    Get.back();
-                    int shop_id =
-                        await transcationcontroller.getShopId("9427662325");
-                    await suppliercontroller.postSupplier(shop_id);
+                    String? nameValidationMessage =
+                        suppliercontroller.validateCustomerName(
+                            suppliercontroller.supplier_name.text);
 
-                    transcationcontroller.maintainRelation(
-                        await transcationcontroller.getShopId("9427662325"),
-                        await transcationcontroller.getCustomerID(
-                            suppliercontroller.supplier_contact_info.text));
+                    // Validate phone number
+                    String? phoneValidationMessage =
+                        suppliercontroller.validatePhoneNumber(
+                            suppliercontroller.supplier_contact_info.text);
 
-                    await suppliercontroller.getSuppliers(shop_id);
+                    if (nameValidationMessage != null ||
+                        phoneValidationMessage != null) {
+                      // If any validation error, display error message
+                      String errorMessage = '';
+                      if (nameValidationMessage != null) {
+                        errorMessage += nameValidationMessage + '\n';
+                      }
+                      if (phoneValidationMessage != null) {
+                        errorMessage += phoneValidationMessage;
+                      }
+                      // Display error message using Snackbar or Toast
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        backgroundColor: AppColors.redColor,
+                        content: Text(errorMessage),
+                      ));
+                    } else {
+                      int shop_id =
+                          await transcationcontroller.getShopId("9427662325");
+                      await suppliercontroller.postSupplier(shop_id);
 
-                    suppliercontroller.supplier_name.clear();
-                    suppliercontroller.supplier_contact_info.clear();
+                      transcationcontroller.maintainRelation(
+                          await transcationcontroller.getShopId("9427662325"),
+                          await transcationcontroller.getCustomerID(
+                              suppliercontroller.supplier_contact_info.text));
+
+                      await suppliercontroller.getSuppliers(shop_id);
+
+                      suppliercontroller.supplier_name.clear();
+                      suppliercontroller.supplier_contact_info.clear();
+                      Get.back();
+                    }
                   },
                   buttonText: 'Add Supplier',
                 ),

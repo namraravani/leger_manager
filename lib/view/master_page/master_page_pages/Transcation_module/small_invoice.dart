@@ -7,8 +7,13 @@ import 'package:leger_manager/view/master_page/master_page_pages/Inventory_Modul
 
 class SmallInvoice extends StatelessWidget {
   final List<InventoryData> dataList;
+  final String customerName;
+  final String customerInfo;
 
-  SmallInvoice({required this.dataList});
+  SmallInvoice(
+      {required this.dataList,
+      required this.customerName,
+      required this.customerInfo});
 
   BillingController billingcontroller = Get.put(BillingController());
 
@@ -26,7 +31,11 @@ class SmallInvoice extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  "Namra",
+                  "${customerName}",
+                  style: TextStyle(fontSize: 5),
+                ),
+                Text(
+                  "${customerInfo}",
                   style: TextStyle(fontSize: 5),
                 ),
                 Text(

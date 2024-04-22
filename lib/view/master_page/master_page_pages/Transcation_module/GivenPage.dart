@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:leger_manager/Classes/Transcation.dart';
 import 'package:leger_manager/Components/CircleAvatar.dart';
 import 'package:leger_manager/Components/app_colors.dart';
+import 'package:leger_manager/Components/common_input_formatters.dart';
 import 'package:leger_manager/Components/general_txtfld.dart';
 import 'package:leger_manager/Controller/customer_controller.dart';
 import 'package:leger_manager/Controller/transcation_controller.dart';
@@ -64,6 +65,7 @@ class GivenPage extends StatelessWidget {
                     TextField(
                       style: TextStyle(fontSize: 25, color: AppColors.redColor),
                       keyboardType: TextInputType.number,
+                      inputFormatters: getCommonInputFormatters(),
                       controller: transcationcontroller.data,
                       decoration: InputDecoration(
                         hintText: "Enter Amount",
@@ -74,29 +76,6 @@ class GivenPage extends StatelessWidget {
                 ),
               ),
             ],
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Container(
-            height: 50,
-            width: 300,
-            child: TextField(
-              style: TextStyle(fontSize: 25, color: AppColors.redColor),
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                  hintText: "Enter Note Optional",
-                  labelText: "Enter Note",
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: InputBorder.none,
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.redColor),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.redColor),
-                  )),
-            ),
           ),
           SizedBox(
             height: 70,
@@ -145,6 +124,8 @@ class GivenPage extends StatelessWidget {
                             await transcationcontroller.getShopId("9427662325"),
                         custId: await transcationcontroller
                             .getCustomerID(customerInfo),
+                        customerName: customerName,
+                        customerinfo: customerInfo,
                       ));
                     },
                     icon: Icon(

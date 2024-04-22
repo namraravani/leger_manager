@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:leger_manager/Classes/Transcation.dart';
 import 'package:leger_manager/Components/CircleAvatar.dart';
 import 'package:leger_manager/Components/app_colors.dart';
+import 'package:leger_manager/Components/common_input_formatters.dart';
 import 'package:leger_manager/Controller/customer_controller.dart';
 import 'package:leger_manager/Controller/transcation_controller.dart';
 import 'package:leger_manager/view/master_page/master_page_pages/Transcation_module/transaction_page.dart';
@@ -66,6 +67,7 @@ class _ReceviedPageState extends State<ReceviedPage> {
                 child: TextField(
                   style: TextStyle(fontSize: 25, color: AppColors.greenColor),
                   keyboardType: TextInputType.number,
+                  inputFormatters: getCommonInputFormatters(),
                   controller: transcationcontroller.data,
                   decoration: InputDecoration(
                     hintText: "Enter Amount",

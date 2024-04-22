@@ -11,6 +11,7 @@ import 'package:leger_manager/Controller/login_controller.dart';
 import 'package:leger_manager/Controller/test_controller.dart';
 import 'package:leger_manager/Controller/transcation_controller.dart';
 import 'package:leger_manager/view/master_page/master_page_pages/Customer_Module/Customer_add.dart';
+import 'package:leger_manager/view/master_page/master_page_pages/Inventory_Module/Bill_Module/ViewBills.dart';
 import 'package:leger_manager/view/master_page/master_page_pages/Transcation_module/transaction_page.dart';
 import 'package:leger_manager/view/master_page/master_page_pages/Customer_Module/test_contact_view.dart';
 import 'package:lottie/lottie.dart';
@@ -37,7 +38,61 @@ class _CustomerPageState extends State<CustomerPage> {
               await customercontroller.loadLastTransactionDataForCustomers(
                   customercontroller.customerlist);
             },
-            child: buildCustomerListView(),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Get.to(ViewBill());
+                    },
+                    child: Container(
+                      height: 50,
+                      width: 400,
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: AppColors.secondaryColor,
+                          width: 2,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: Text(
+                              "View Bills",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: AppColors.secondaryColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            color: AppColors.secondaryColor,
+                            size: 20,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                buildCustomerListView(),
+              ],
+            ),
           ),
           Positioned(
             bottom: 16.0,
@@ -61,111 +116,147 @@ class _CustomerPageState extends State<CustomerPage> {
   }
 
   Widget buildCustomerListView() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10.0),
-      child: Obx(
-        () {
-          if (customercontroller.customerlist.isEmpty) {
-            return Center(child: buildEmptyListAnimation());
-          } else {
-            return ListView.builder(
-              itemCount: customercontroller.customerlist.length,
-              itemBuilder: (context, index) {
-                return Column(
-                  children: [
-                    ListTile(
-                      onTap: () async {
-                        int shop_id =
-                            await transactioncontroller.getShopId("9427662325");
-                        int cust_id = await transactioncontroller.getCustomerID(
-                            customercontroller.customerlist[index].contactInfo);
-                        print(shop_id);
-                        transactioncontroller.getAlltranscation(
-                            shop_id, cust_id);
-                        Get.to(TransactionPage(
-                          customerName: customercontroller
-                              .customerlist[index].customerName,
-                          contactinfo: customercontroller
-                              .customerlist[index].contactInfo,
-                        ));
-                      },
-                      leading: InitialsAvatar(
-                          name: customercontroller
-                              .customerlist[index].customerName),
-                      title: Obx(
-                        () => Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(customercontroller
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 10.0),
+        child: Obx(
+          () {
+            if (customercontroller.customerlist.isEmpty) {
+              return Center(child: buildEmptyListAnimation());
+            } else {
+              return ListView.builder(
+                itemCount: customercontroller.customerlist.length,
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      ListTile(
+                        onTap: () async {
+                          int shop_id = await transactioncontroller
+                              .getShopId("9427662325");
+                          int cust_id = await transactioncontroller
+                              .getCustomerID(customercontroller
+                                  .customerlist[index].contactInfo);
+                          print(shop_id);
+                          transactioncontroller.getAlltranscation(
+                              shop_id, cust_id);
+                          Get.to(TransactionPage(
+                            customerName: customercontroller
+                                .customerlist[index].customerName,
+                            contactinfo: customercontroller
+                                .customerlist[index].contactInfo,
+                          ));
+                        },
+                        leading: InitialsAvatar(
+                            name: customercontroller
                                 .customerlist[index].customerName),
-                            Spacer(),
-                            if (customercontroller.totalSumList.isNotEmpty &&
-                                index < customercontroller.totalSumList.length)
-                              Text(
-                                "${customercontroller.totalSumList[index] < 0 ? customercontroller.totalSumList[index].abs() : customercontroller.totalSumList[index]}",
-                                style: TextStyle(
-                                  color:
-                                      customercontroller.totalSumList[index] < 0
+                        title: Obx(
+                          () => Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(customercontroller
+                                  .customerlist[index].customerName),
+                              Spacer(),
+                              if (customercontroller.totalSumList.isNotEmpty &&
+                                  index <
+                                      customercontroller.totalSumList.length)
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.currency_rupee,
+                                      size: 15,
+                                      color: customercontroller
+                                                  .totalSumList[index] <
+                                              0
                                           ? Colors.red
                                           : Colors.green,
+                                    ),
+                                    Text(
+                                      "${customercontroller.totalSumList[index] < 0 ? customercontroller.totalSumList[index].abs() : customercontroller.totalSumList[index]}",
+                                      style: TextStyle(
+                                        color: customercontroller
+                                                    .totalSumList[index] <
+                                                0
+                                            ? Colors.red
+                                            : Colors.green,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      subtitle: Obx(
-                        () => Row(
-                          children: [
-                            Icon(
-                              Icons.currency_rupee_sharp,
-                              size: 17,
-                            ),
-                            if (customercontroller
-                                    .lastTransactionList.isNotEmpty &&
-                                index <
-                                    customercontroller
-                                        .lastTransactionList.length)
-                              Text(
-                                customercontroller
-                                    .lastTransactionList[index].data,
-                                style: TextStyle(fontWeight: FontWeight.w400),
+                        subtitle: Obx(
+                          () => Row(
+                            children: [
+                              Icon(
+                                Icons.currency_rupee_sharp,
+                                size: 17,
                               ),
-                            SizedBox(width: 5),
-                            if (customercontroller
-                                    .lastTransactionList.isNotEmpty &&
-                                index <
-                                    customercontroller
-                                        .lastTransactionList.length)
-                              Row(
-                                children: [
-                                  Text(
-                                    "Payment added on ",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w400),
+                              if (customercontroller
+                                      .lastTransactionList.isNotEmpty &&
+                                  index <
+                                      customercontroller
+                                          .lastTransactionList.length)
+                                Text(
+                                  customercontroller
+                                      .lastTransactionList[index].data,
+                                  style: TextStyle(fontWeight: FontWeight.w400),
+                                ),
+                              SizedBox(width: 5),
+                              if (customercontroller
+                                      .lastTransactionList.isNotEmpty &&
+                                  index <
+                                      customercontroller
+                                          .lastTransactionList.length)
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "Payment added on ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 13),
+                                      ),
+                                      Text(
+                                        "${customercontroller.formatDateTime(customercontroller.lastTransactionList[index].transcationTime)}",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 13),
+                                      ),
+                                      Spacer(),
+                                      customercontroller.totalSumList[index] < 0
+                                          ? Text(
+                                              "DUE",
+                                              style: TextStyle(
+                                                  color: AppColors.redColor,
+                                                  fontSize: 9),
+                                            )
+                                          : Text(
+                                              "ADVANCE",
+                                              style: TextStyle(
+                                                  color: AppColors.greenColor,
+                                                  fontSize: 9),
+                                            )
+                                    ],
                                   ),
-                                  Text(
-                                    "${customercontroller.formatDateTime(customercontroller.lastTransactionList[index].transcationTime)}",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w400),
-                                  )
-                                ],
-                              ),
-                          ],
+                                ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    Divider(
-                      height: 1,
-                      indent: 16,
-                      endIndent: 16,
-                      color: Colors.grey,
-                    ),
-                  ],
-                );
-              },
-            );
-          }
-        },
+                      Divider(
+                        height: 1,
+                        indent: 16,
+                        endIndent: 16,
+                        color: Colors.grey,
+                      ),
+                    ],
+                  );
+                },
+              );
+            }
+          },
+        ),
       ),
     );
   }

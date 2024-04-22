@@ -23,6 +23,7 @@ class TranscationController extends GetxController {
   TextEditingController variable = TextEditingController();
   RxString mobileNumber = ''.obs;
   RxString contactinfo = ''.obs;
+  
 
   final CustomerController customerController = Get.put(CustomerController());
   final BillingController billingController = Get.put(BillingController());
